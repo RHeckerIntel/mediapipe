@@ -13,7 +13,6 @@ cc_library(
         "//mediapipe/framework/port:file_helpers",
         "//mediapipe/framework/port:opencv_highgui",
         "//mediapipe/framework/port:opencv_imgproc",
-        "//mediapipe/framework/port:opencv_video",
         "//mediapipe/framework/port:parse_text_proto",
         "//mediapipe/framework/port:status",
         "@com_google_absl//absl/flags:flag",
@@ -32,5 +31,19 @@ cc_binary(
     ],
     deps = [
         ":demo_dependencies",
+        "@windows_pugixml//:pugixml",
+        "@windows_tbb//:tbb",
+    ],
+)
+
+cc_binary(
+    name = "scratch",
+    srcs = ["scratch.cc"],
+    data = [
+        "//mediapipe/calculators/geti/graphs:graphs",
+    ],
+    deps = [
+        "@model_api//:model_api",
+        "@windows_openvino//:openvino",
     ],
 )

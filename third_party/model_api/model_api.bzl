@@ -37,19 +37,20 @@ cmake(
         "--",  # <- Pass remaining options to the native tool.
         # https://github.com/bazelbuild/rules_foreign_cc/issues/329
         # there is no elegant paralell compilation support
-        "VERBOSE=1",
+        # "VERBOSE=1",
         "-j 4",
     ],
     cache_entries = {{
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
-        "OpenVINO_DIR": "/opt/intel/openvino/runtime/cmake",
+        "OpenVINO_DIR": "C:/Users/selse/tmp/vcpkg/packages/openvino_x64-windows/share/openvino",
+        "OpenCV_DIR": "C:/opencv/build",
     }},
     env = {{
         "HTTP_PROXY": "{http_proxy}",
         "HTTPS_PROXY": "{https_proxy}",
     }},
     lib_source = ":all_srcs",
-    out_static_libs = ["libmodel_api.a"],
+    out_static_libs = ["model_api.lib"],
     tags = ["requires-network"]
 )
 
@@ -57,7 +58,7 @@ cc_library(
     name = "model_api",
     deps = [
         "@mediapipe//mediapipe/framework/port:opencv_core",
-        "@linux_openvino//:openvino",
+        "@windows_openvino//:openvino",
         ":model_api_cmake",
     ],
     visibility = ["//visibility:public"],
@@ -70,3 +71,4 @@ model_api_repository = repository_rule(
     implementation = _impl,
     local=False,
 )
+

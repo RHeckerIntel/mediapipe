@@ -27,7 +27,6 @@
 #include "mediapipe/framework/port/file_helpers.h"
 #include "mediapipe/framework/port/opencv_highgui_inc.h"
 #include "mediapipe/framework/port/opencv_imgproc_inc.h"
-#include "mediapipe/framework/port/opencv_video_inc.h"
 #include "mediapipe/framework/port/parse_text_proto.h"
 #include "mediapipe/framework/port/status.h"
 #include "../utils/data_structures.h"
@@ -39,24 +38,27 @@ constexpr char kOutputStream[] = "output_image";
 constexpr char kWindowName[] = "MediaPipe";
 constexpr float kMicrosPerSecond = 1e6;
 
-ABSL_FLAG(std::string, input_image_path, "/data/cattle.jpg",
+ABSL_FLAG(std::string, input_image_path, "C:/data/cattle.jpg",
           "Full path of image to load. "
           "If not provided, nothing will run.");
-ABSL_FLAG(std::string, output_image_path, "/data/mp_dep_output.jpg",
+ABSL_FLAG(std::string, output_image_path, "C:/data/mp_dep_output.jpg",
           "Full path of where to save image result (.jpg only). "
           "If not provided, show result in a window.");
 ABSL_FLAG(std::string, graph_config_path,
           "mediapipe/calculators/geti/graphs/examples/mapi_anomaly_calculator.pbtxt",
           "Full path to the graph description file.");
 ABSL_FLAG(std::string, model_xml_path,
-          "/data/geti/anomaly_classification_padim.xml",
+          "C:/data/detection_ssd.xml",
           "Full path to the model xml file.");
 
 namespace {
 
 absl::Status ProcessImage(std::unique_ptr<mediapipe::CalculatorGraph> graph) {
+  std::cout << "Hello world" << std::endl;
   LOG(INFO) << "Load the image.";
   const cv::Mat raw_image = cv::imread(absl::GetFlag(FLAGS_input_image_path));
+
+  std::cout << "img: " << raw_image.size() << std::endl;
 
   LOG(INFO) << "Start running the calculator graph.";
   ASSIGN_OR_RETURN(mediapipe::OutputStreamPoller output_image_poller,
@@ -77,12 +79,16 @@ absl::Status ProcessImage(std::unique_ptr<mediapipe::CalculatorGraph> graph) {
       kInputStream,
       mediapipe::MakePacket<cv::Mat>(raw_image).At(mediapipe::Timestamp(0))));
 
+  std::cout << "so far so good" << std::endl;
+
   // Get the graph result packets, or stop if that fails.
   mediapipe::Packet output_image_packet;
   if (!output_image_poller.Next(&output_image_packet)) {
     return absl::UnknownError(
         "Failed to get packet from output stream 'output_image'.");
   }
+
+  std::cout << "got a pacakge?" << std::endl;
 
   cv::Mat output_frame_mat = output_image_packet.Get<cv::Mat>();
   const bool save_image = !absl::GetFlag(FLAGS_output_image_path).empty();
@@ -105,20 +111,41 @@ absl::Status ProcessImage(std::unique_ptr<mediapipe::CalculatorGraph> graph) {
 
 absl::Status RunMPPGraph() {
   std::string calculator_graph_config_contents;
-  MP_RETURN_IF_ERROR(
-      mediapipe::file::GetContents(absl::GetFlag(FLAGS_graph_config_path),
-                                   &calculator_graph_config_contents));
-  LOG(INFO) << "Get calculator graph config contents: "
-            << calculator_graph_config_contents;
+  mediapipe::CalculatorGraphConfig graph_config =
+    mediapipe::ParseTextProtoOrDie<mediapipe::CalculatorGraphConfig>(absl::Substitute(
+        R"pb(
+          input_stream : "input_image"
+          input_side_packet : "model_path"
+          input_side_packet : "device"
+          output_stream : "output_image"
 
-  mediapipe::CalculatorGraphConfig config =
-      mediapipe::ParseTextProtoOrDie<mediapipe::CalculatorGraphConfig>(
-          calculator_graph_config_contents);
+          node {
+          calculator : "OpenVINOInferenceAdapterCalculator"
+          input_side_packet : "MODEL_PATH:model_path"
+          input_side_packet : "DEVICE:device"
+          output_side_packet : "INFERENCE_ADAPTER:adapter"
+          }
+
+          node {
+          calculator : "DetectionCalculator"
+          input_side_packet : "INFERENCE_ADAPTER:adapter"
+          input_stream : "IMAGE:input_image"
+          output_stream: "INFERENCE_RESULT:result"
+          }
+
+          node {
+          calculator : "OverlayCalculator"
+          input_stream : "IMAGE:input_image"
+          input_stream : "INFERENCE_RESULT:result"
+          output_stream : "IMAGE:output_image"
+          }
+        )pb"));
+
 
   LOG(INFO) << "Initialize the calculator graph.";
   std::unique_ptr<mediapipe::CalculatorGraph> graph =
       absl::make_unique<mediapipe::CalculatorGraph>();
-  MP_RETURN_IF_ERROR(graph->Initialize(config));
+  MP_RETURN_IF_ERROR(graph->Initialize(graph_config));
   LOG(INFO) << "Success Initialize the calculator graph.";
 
   const bool load_image = !absl::GetFlag(FLAGS_input_image_path).empty();
@@ -134,14 +161,16 @@ absl::Status RunMPPGraph() {
 }  // namespace
 
 int main(int argc, char** argv) {
+  std::cout << "Hello world" << std::endl;
+  FLAGS_logtostderr = true;
   google::InitGoogleLogging(argv[0]);
   absl::ParseCommandLine(argc, argv);
   absl::Status run_status = RunMPPGraph();
   if (!run_status.ok()) {
-    LOG(ERROR) << "Failed to run the graph: " << run_status.message();
+    std::cout << "Failed to run the graph: " << run_status.message() << std::endl;
     return EXIT_FAILURE;
   } else {
-    LOG(INFO) << "Success!";
+    std::cout << "Success!" << std::endl;
   }
   return EXIT_SUCCESS;
 }

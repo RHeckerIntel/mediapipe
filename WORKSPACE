@@ -825,6 +825,24 @@ new_local_repository(
     path = "/opt/intel/openvino/runtime",
 )
 
+new_local_repository(
+    name = "windows_openvino",
+    build_file = "//third_party:openvino_windows.BUILD",
+    path = "C:/Users/selse/tmp/vcpkg/packages/openvino_x64-windows",
+)
+
+new_local_repository(
+    name = "windows_tbb",
+    build_file = "//third_party:tbb_windows.BUILD",
+    path = "C:/Users/selse/tmp/vcpkg/packages/tbb_x64-windows",
+)
+
+new_local_repository(
+    name = "windows_pugixml",
+    build_file = "//third_party:pugixml_windows.BUILD",
+    path = "C:/Users/selse/tmp/vcpkg/packages/pugixml_x64-windows",
+)
+
 git_repository(
     name = "oneTBB",
     branch = "v2021.10.0",
