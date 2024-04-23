@@ -4,6 +4,7 @@
 #include <models/detection_model.h>
 #include <models/input_data.h>
 #include <models/results.h>
+#include <functional>
 
 #include <memory>
 #include <stdexcept>
@@ -21,7 +22,9 @@ class GraphRunner  {
   GraphRunner(): graph(std::make_shared<mediapipe::CalculatorGraph>()) {}
   bool OpenGraph(const std::string& task_name, const std::string& model_path);
   std::string Get();
+  void Listen(const std::function<void(const std::string&)> callback);
   void Queue(const std::vector<char>& image_data);
+  void Stop();
 
  private:
 

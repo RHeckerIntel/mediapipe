@@ -30,23 +30,30 @@ std::string GraphRunner::Get() {
     if (running && poller->Next(&output_packet)) {
         std::cout << " whoop new package " << std::endl;
         cv::Mat output_image = output_packet.Get<cv::Mat>();
-        std::cout << "huh?" << std::endl;
-        cv::imwrite("C:/data/output.png", output_image);
         return geti::base64_encode_mat(output_image);
     }
     return "";
 }
 
-void GraphRunner::Queue(const std::vector<char>& image_data) {
-    std::cout << "queuing img" << std::endl;
+void GraphRunner::Listen(const std::function<void(const std::string&)> callback) {
+    mediapipe::Packet output_packet;
+    while (running && poller->Next(&output_packet)) {
+        std::cout << " whoop new package " << std::endl;
+        cv::Mat output_image = output_packet.Get<cv::Mat>();
+        callback(geti::base64_encode_mat(output_image));
+    }
+}
 
-    std::cout << image_data.size() << std::endl;
+void GraphRunner::Queue(const std::vector<char>& image_data) {
+    std::cout << "queued..." << std::endl;
     auto image = cv::imdecode(image_data, 1);
-    std::cout << image.size() << std::endl;
     auto packet = mediapipe::MakePacket<cv::Mat>(image).At(mediapipe::Timestamp(++timestamp));
     graph->AddPacketToInputStream("input", packet);
+}
 
-    std::cout << "queued..." << std::endl;
+void GraphRunner::Stop() {
+    graph->WaitUntilIdle();
+    running = false;
 }
 
 }
