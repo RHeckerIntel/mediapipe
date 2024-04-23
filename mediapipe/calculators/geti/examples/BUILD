@@ -31,8 +31,6 @@ cc_binary(
     ],
     deps = [
         ":demo_dependencies",
-        "@windows_pugixml//:pugixml",
-        "@windows_tbb//:tbb",
     ],
 )
 
