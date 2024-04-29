@@ -31,7 +31,7 @@ filegroup(
 )
 
 cmake(
-    name = "model_api_cmake",
+    name = "model_api_cmake_windows",
     build_args = [
         "--verbose",
         "--",  # <- Pass remaining options to the native tool.
@@ -54,12 +54,38 @@ cmake(
     tags = ["requires-network"]
 )
 
+cmake(
+    name = "model_api_cmake_linux",
+    build_args = [
+        "--verbose",
+        "--",  # <- Pass remaining options to the native tool.
+        # https://github.com/bazelbuild/rules_foreign_cc/issues/329
+        # there is no elegant paralell compilation support
+        "VERBOSE=1",
+        "-j 4",
+    ],
+    cache_entries = {{
+        "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
+        "OpenVINO_DIR": "/opt/intel/openvino/runtime/cmake",
+    }},
+    env = {{
+        "HTTP_PROXY": "{http_proxy}",
+        "HTTPS_PROXY": "{https_proxy}",
+    }},
+    lib_source = ":all_srcs",
+    out_static_libs = ["libmodel_api.a"],
+    tags = ["requires-network"]
+)
+
+
 cc_library(
     name = "model_api",
     deps = [
         "@mediapipe//mediapipe/framework/port:opencv_core",
-        "@windows_openvino//:openvino",
-        ":model_api_cmake",
+        #"@windows_openvino//:openvino",
+        #":model_api_cmake_windows",
+        ":model_api_cmake_linux",
+        "@linux_openvino//:openvino",
     ],
     visibility = ["//visibility:public"],
 )

@@ -24,7 +24,7 @@ static const char* graph = R"pb(
           output_side_packet : "INFERENCE_ADAPTER:adapter_0"
           node_options: {
             [type.googleapis.com/mediapipe.OpenVINOInferenceAdapterCalculatorOptions] {
-                model_path: "C:/Users/selse/AppData/Roaming/intel.geti/inference/662aac1fedcb02d8b6323097/662aac23edcb02d8b632309a.xml"
+                model_path: "/data/geti/detection_ssd.xml"
             }
           }
           }
@@ -59,7 +59,7 @@ int main() {
 
 
     {
-        std::ifstream image_file("C:/data/cattle.jpg", std::ifstream::binary);
+        std::ifstream image_file("/data/cattle.jpg", std::ifstream::binary);
         ////std::vector<char> image_data((std::istreambuf_iterator<char>(image_file)), std::istreambuf_iterator<char>());
         std::stringstream ss;
         ss << image_file.rdbuf();
@@ -67,17 +67,6 @@ int main() {
         std::string data = ss.str();
         std::string result = GraphRunner_Run(graph, data.c_str(), data.size());
     }
-    {
-        std::ifstream image_file("C:/data/cow.jpg", std::ifstream::binary);
-        ////std::vector<char> image_data((std::istreambuf_iterator<char>(image_file)), std::istreambuf_iterator<char>());
-        std::stringstream ss;
-        ss << image_file.rdbuf();
-
-        std::string data = ss.str();
-        std::string result = GraphRunner_Run(graph, data.c_str(), data.size());
-    }
-
-
 
     //std::cout << "graph open style: " << std::endl;
     //auto instance = GraphRunner_Open("detection", "C:/data/detection_ssd.xml");

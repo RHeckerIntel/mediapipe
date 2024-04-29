@@ -1,7 +1,12 @@
+#ifdef _WIN32
 #ifdef COMPILING_DLL
 #define DLLEXPORT __declspec(dllexport)
 #else
 #define DLLEXPORT __declspec(dllimport)
+#endif
+#else
+#include <cstddef>
+#define DLLEXPORT
 #endif
 
 typedef void* CGraphRunner;

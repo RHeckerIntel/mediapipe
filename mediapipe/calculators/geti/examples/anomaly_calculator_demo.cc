@@ -38,17 +38,17 @@ constexpr char kOutputStream[] = "output_image";
 constexpr char kWindowName[] = "MediaPipe";
 constexpr float kMicrosPerSecond = 1e6;
 
-ABSL_FLAG(std::string, input_image_path, "C:/data/cattle.jpg",
+ABSL_FLAG(std::string, input_image_path, "/data/cattle.jpg",
           "Full path of image to load. "
           "If not provided, nothing will run.");
-ABSL_FLAG(std::string, output_image_path, "C:/data/mp_dep_output.jpg",
+ABSL_FLAG(std::string, output_image_path, "/data/mp_dep_output.jpg",
           "Full path of where to save image result (.jpg only). "
           "If not provided, show result in a window.");
 ABSL_FLAG(std::string, graph_config_path,
           "mediapipe/calculators/geti/graphs/examples/mapi_anomaly_calculator.pbtxt",
           "Full path to the graph description file.");
 ABSL_FLAG(std::string, model_xml_path,
-          "C:/data/detection_ssd.xml",
+          "/data/geti/detection_ssd.xml",
           "Full path to the model xml file.");
 
 namespace {

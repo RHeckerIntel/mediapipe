@@ -1,6 +1,7 @@
 #include "graph_runner.h"
 #include <iostream>
-#include "utils.h"
+
+#include "mediapipe/framework/port/parse_text_proto.h"
 
 namespace geti{
 
