@@ -4,20 +4,13 @@
 
 namespace geti{
 
-bool GraphRunner::OpenGraph(const std::string& task_name, const std::string& model_path) {
-    std::map<std::string, mediapipe::Packet> inputSidePackets;
-    inputSidePackets["model_path"] =
-        mediapipe::MakePacket<std::string>(model_path)
-            .At(mediapipe::Timestamp(0));
-    inputSidePackets["device"] =
-        mediapipe::MakePacket<std::string>("AUTO").At(mediapipe::Timestamp(0));
-
-    const auto& graph_config = get_graph_config_by_task(task_name);
+bool GraphRunner::OpenGraph(const std::string& graph_content) {
+    mediapipe::CalculatorGraphConfig graph_config = mediapipe::ParseTextProtoOrDie<mediapipe::CalculatorGraphConfig>(absl::Substitute(graph_content));
     graph = std::make_shared<mediapipe::CalculatorGraph>(graph_config);
 
     poller = std::unique_ptr<mediapipe::OutputStreamPoller>(new mediapipe::OutputStreamPoller(graph->AddOutputStreamPoller("output").value()));
     //graph->Initialize(graph_config);
-    graph->StartRun(inputSidePackets);
+    graph->StartRun({});
     running = true;
 
     std::cout << "Started..." << std::endl;
@@ -47,6 +40,7 @@ void GraphRunner::Listen(const std::function<void(const std::string&)> callback)
 void GraphRunner::Queue(const std::vector<char>& image_data) {
     std::cout << "queued..." << std::endl;
     auto image = cv::imdecode(image_data, 1);
+    std::cout << "image properties: " << image.size() << std::endl;
     auto packet = mediapipe::MakePacket<cv::Mat>(image).At(mediapipe::Timestamp(++timestamp));
     graph->AddPacketToInputStream("input", packet);
 }

@@ -4,7 +4,6 @@
 #include <vector>
 #include <sstream>
 
-
 #include <thread>
 
 void handle_input(const char* message) {
@@ -15,10 +14,38 @@ void listen_task(void* instance) {
     GraphRunner_Listen(instance, handle_input);
 }
 
+static const char* graph = R"pb(
+ input_stream : "input"
+          output_stream : "output"
+
+
+          node {
+          calculator : "OpenVINOInferenceAdapterCalculator"
+          output_side_packet : "INFERENCE_ADAPTER:adapter_0"
+          node_options: {
+            [type.googleapis.com/mediapipe.OpenVINOInferenceAdapterCalculatorOptions] {
+                model_path: "C:/Users/selse/AppData/Roaming/intel.geti/inference/662aac1fedcb02d8b6323097/662aac23edcb02d8b632309a.xml"
+            }
+          }
+          }
+
+        node {
+          calculator : "DetectionCalculator"
+          input_side_packet : "INFERENCE_ADAPTER:adapter_0"
+          input_stream : "IMAGE:input"
+          output_stream: "INFERENCE_RESULT:result"
+        }
+
+        node {
+          calculator : "OverlayCalculator"
+          input_stream : "IMAGE:input"
+          input_stream : "INFERENCE_RESULT:result"
+          output_stream : "IMAGE:output"
+        }
+        )pb";
+
 int main() {
     std::cout << "scratch" << std::endl;
-
-    std::string image_path = "C:\\data\\cattle.jpg";
 
     //auto image = cv::imread(image_path);
     //std::cout << image.size() << std::endl;
@@ -28,15 +55,29 @@ int main() {
     //cv::imencode(".jpg", image, buf);
     //std::vector<char> image_data(buf.begin(), buf.end());
 
-    std::ifstream image_file(image_path, std::ifstream::binary);
+    //SerializeModel("C:/Users/selse/AppData/Roaming/intel.geti/inference/65c49dc49467d132a02da500/model.xml", "classification", "C:/Users/selse/AppData/Roaming/intel.geti/inference/65c49dc49467d132a02da500/serialized.xml");
 
-    //std::vector<char> image_data((std::istreambuf_iterator<char>(image_file)), std::istreambuf_iterator<char>());
-    std::stringstream ss;
-    ss << image_file.rdbuf();
 
-    std::string data = ss.str();
+    {
+        std::ifstream image_file("C:/data/cattle.jpg", std::ifstream::binary);
+        ////std::vector<char> image_data((std::istreambuf_iterator<char>(image_file)), std::istreambuf_iterator<char>());
+        std::stringstream ss;
+        ss << image_file.rdbuf();
 
-    std::string result = GraphRunner_Run("detection", "C:/data/detection_ssd.xml", data.c_str(), data.size());
+        std::string data = ss.str();
+        std::string result = GraphRunner_Run(graph, data.c_str(), data.size());
+    }
+    {
+        std::ifstream image_file("C:/data/cow.jpg", std::ifstream::binary);
+        ////std::vector<char> image_data((std::istreambuf_iterator<char>(image_file)), std::istreambuf_iterator<char>());
+        std::stringstream ss;
+        ss << image_file.rdbuf();
+
+        std::string data = ss.str();
+        std::string result = GraphRunner_Run(graph, data.c_str(), data.size());
+    }
+
+
 
     //std::cout << "graph open style: " << std::endl;
     //auto instance = GraphRunner_Open("detection", "C:/data/detection_ssd.xml");

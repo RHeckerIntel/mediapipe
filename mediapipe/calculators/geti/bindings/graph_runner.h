@@ -6,6 +6,7 @@
 #include <models/results.h>
 #include <functional>
 
+#include <vector>
 #include <memory>
 #include <stdexcept>
 
@@ -20,7 +21,7 @@ namespace geti {
 class GraphRunner  {
  public:
   GraphRunner(): graph(std::make_shared<mediapipe::CalculatorGraph>()) {}
-  bool OpenGraph(const std::string& task_name, const std::string& model_path);
+  bool OpenGraph(const std::string& graph_content);
   std::string Get();
   void Listen(const std::function<void(const std::string&)> callback);
   void Queue(const std::vector<char>& image_data);
