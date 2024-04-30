@@ -55,8 +55,14 @@ int main() {
     //cv::imencode(".jpg", image, buf);
     //std::vector<char> image_data(buf.begin(), buf.end());
 
+
     //SerializeModel("C:/Users/selse/AppData/Roaming/intel.geti/inference/65c49dc49467d132a02da500/model.xml", "classification", "C:/Users/selse/AppData/Roaming/intel.geti/inference/65c49dc49467d132a02da500/serialized.xml");
 
+    SerializeModel(
+        "/home/rhecker/.local/share/com.example.inference/662baad4ac9c95a4518c0aaa/662baad8ac9c95a4518c0aae_model.xml",
+        "instance_segmentation",
+        "/home/rhecker/.local/share/com.example.inference/662baad4ac9c95a4518c0aaa/662baad8ac9c95a4518c0aae.xml"
+        );
 
     {
         std::ifstream image_file("/data/cattle.jpg", std::ifstream::binary);

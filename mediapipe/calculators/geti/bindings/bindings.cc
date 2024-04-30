@@ -6,6 +6,9 @@
 #include <models/detection_model.h>
 #include <models/classification_model.h>
 #include <models/segmentation_model.h>
+#include <models/instance_segmentation.h>
+#include <models/anomaly_model.h>
+#include <stdexcept>
 
 DLLEXPORT CGraphRunner GraphRunner_Open(const char* graph_content) {
     auto runner= new geti::GraphRunner();
@@ -57,20 +60,29 @@ DLLEXPORT void GraphRunner_Listen(CGraphRunner instance, CallbackFunction callba
 
 DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, const char* output_filename) {
     std::string model_type_str(model_type);
-    // dont care about duplication for now.
+    std::unique_ptr<ModelBase> model;
+    std::cout << "serializing " << model_type_str << std::endl;
+    std::cout << "input " << model_path << std::endl;
+    std::cout << "output " << output_filename << std::endl;
+
     if (model_type_str == "detection") {
-        auto model = DetectionModel::create_model(model_path);
-        const std::shared_ptr<ov::Model>& ov_model = model->getModel();
-        ov::serialize(ov_model, output_filename);
+        model = DetectionModel::create_model(model_path);
+    } else if (model_type_str == "classification") {
+        model = ClassificationModel::create_model(model_path);
+    } else if (model_type_str == "segmentation") {
+        model = SegmentationModel::create_model(model_path);
+    } else if (model_type_str == "instance_segmentation") {
+        model = MaskRCNNModel::create_model(model_path);
+    } else if (model_type_str == "anomaly_detection") {
+        model = AnomalyModel::create_model(model_path);
+    } else if (model_type_str == "anomaly_classification") {
+        model = AnomalyModel::create_model(model_path);
+    } else if (model_type_str == "anomaly_segmentation") {
+        model = AnomalyModel::create_model(model_path);
+    } else {
+        throw std::runtime_error("Model type not available");
     }
-    if (model_type_str == "classification") {
-        auto model = ClassificationModel::create_model(model_path);
-        const std::shared_ptr<ov::Model>& ov_model = model->getModel();
-        ov::serialize(ov_model, output_filename);
-    }
-    if (model_type_str == "segmentation") {
-        auto model = SegmentationModel::create_model(model_path);
-        const std::shared_ptr<ov::Model>& ov_model = model->getModel();
-        ov::serialize(ov_model, output_filename);
-    }
+
+    const std::shared_ptr<ov::Model>& ov_model = model->getModel();
+    ov::serialize(ov_model, output_filename);
 }
