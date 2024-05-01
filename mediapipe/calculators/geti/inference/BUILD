@@ -69,8 +69,6 @@ cc_library(
         "//mediapipe/calculators/geti/utils:emptylabel_cc_proto",
         ":inference_utils",
         "@model_api//:model_api",
-        #"@windows_pugixml//:pugixml",
-        #"@windows_tbb//:tbb",
         ":geti_calculator_base",
     ],
     defines = [

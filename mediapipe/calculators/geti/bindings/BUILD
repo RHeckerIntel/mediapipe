@@ -1,3 +1,8 @@
+load("//mediapipe/calculators/geti/bindings:windows_dll_library.bzl", "windows_dll_library")
+licenses(["notice"])
+
+package(default_visibility = ["//visibility:public"])
+
 cc_library(
     name = "graph_runner",
     srcs = ["graph_runner.cc"],
@@ -29,6 +34,18 @@ cc_library(
     linkopts = ["-Wl,-rpath,$$ORIGIN/lib"],
 )
 
+windows_dll_library(
+    name = "windows_bindings",
+    srcs = [ "bindings.cc" ],
+    hdrs = [ "bindings.h" ],
+    deps = [
+        "@windows_pugixml//:pugixml",
+        "@windows_tbb//:tbb",
+        ":graph_runner"
+    ],
+    copts = ["/DCOMPILING_DLL"],
+)
+
 cc_binary(
     name = "scratch",
     srcs = [ "scratch.cc",],
@@ -36,7 +53,7 @@ cc_binary(
 )
 
 cc_binary(
-    name = "cc_bindings",
+    name = "linux_bindings",
     deps = [
         ":bindings",
     ],
