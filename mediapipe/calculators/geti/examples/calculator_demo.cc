@@ -43,6 +43,7 @@ namespace {
 absl::Status ProcessImage(std::unique_ptr<mediapipe::CalculatorGraph> graph, const std::string& image_path, const std::string& output_path) {
   LOG(INFO) << "Load the image.";
   const cv::Mat raw_image = cv::imread(image_path);
+  cv::cvtColor(raw_image, raw_image, cv::COLOR_BGR2RGB); // this happens inside the ModelInferRequest
 
   LOG(INFO) << "Start running the calculator graph.";
   ASSIGN_OR_RETURN(mediapipe::OutputStreamPoller output_image_poller,

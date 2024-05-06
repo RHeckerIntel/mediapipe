@@ -144,6 +144,7 @@ cc_library(
     ],
     deps = [
         ":data_structures",
+        ":overlay",
         "//mediapipe/framework:calculator_framework",
         "//mediapipe/framework/formats:image_frame",
         "//mediapipe/framework/formats:image_frame_opencv",

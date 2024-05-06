@@ -31,6 +31,8 @@
 #include "mediapipe/framework/port/opencv_core_inc.h"
 #include "mediapipe/framework/port/status.h"
 
+#include <blend2d.h>
+
 namespace mediapipe {
 
 // Runs detection inference on the provided image and OpenVINO model.
@@ -50,6 +52,9 @@ class OverlayCalculator : public GetiCalculatorBase {
   absl::Status Open(CalculatorContext *cc) override;
   absl::Status GetiProcess(CalculatorContext *cc) override;
   absl::Status Close(CalculatorContext *cc) override;
+
+ private:
+  BLFont font;
 };
 
 }  // namespace mediapipe

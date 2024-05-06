@@ -15,6 +15,8 @@
  */
 #include "overlay_calculator.h"
 
+#include "overlay.h"
+
 namespace mediapipe {
 
 absl::Status OverlayCalculator::GetContract(CalculatorContract *cc) {
@@ -29,6 +31,13 @@ absl::Status OverlayCalculator::GetContract(CalculatorContract *cc) {
 absl::Status OverlayCalculator::Open(CalculatorContext *cc) {
   LOG(INFO) << "DetectionOverlayCalculator::Open()";
   cc->SetOffset(TimestampDiff(0));
+  BLFontFace face;
+  const char fontName[] = "/home/rhecker/Projects/blend2d_workspace/app/intelone-text-regular.ttf";
+  BLResult result = face.createFromFile(fontName);
+  if (result != BL_SUCCESS) {
+      printf("Failed to load a font (err=%u)\n", result);
+  }
+  font.createFromFace(face, 12.0f);
 
   return absl::OkStatus();
 }
@@ -39,67 +48,33 @@ absl::Status OverlayCalculator::GetiProcess(CalculatorContext *cc) {
     return absl::OkStatus();
   }
 
+  std::vector<geti::ProjectLabel> label_definitions = geti::read_file("/home/rhecker/Projects/blend2d_workspace/app/project.json")["tasks"][0]["labels"];
   // Get inputs
-  const cv::Mat &cvimage = cc->Inputs().Tag("IMAGE").Get<cv::Mat>();
+  const cv::Mat &input_image = cc->Inputs().Tag("IMAGE").Get<cv::Mat>();
   const auto result =
       cc->Inputs().Tag("INFERENCE_RESULT").Get<geti::InferenceResult>();
 
   // Apply results
-  cv::Mat output_img = cvimage.clone();
-  auto color = cv::Scalar(255, 0, 0);
+  cv::Mat cv_image;
+  cv::cvtColor(input_image, cv_image, cv::COLOR_RGB2BGRA);
+
+  BLImage img;
+  img.createFromData(cv_image.cols, cv_image.rows, BLFormat::BL_FORMAT_XRGB32, cv_image.data, cv_image.step);
+  BLContext ctx(img);
+  ctx.setStrokeWidth(2);
+
   for (auto &detection : result.rectangles) {
-    auto position = cv::Point2f(detection.shape.x, detection.shape.y + 20);
-    std::ostringstream predictions;
-    for (auto &label : detection.labels) {
-      predictions << ":" << label.label.label << "("
-                  << std::to_string(label.probability) << ")";
-    }
-    cv::rectangle(output_img, detection.shape, color, 2);
-    cv::putText(output_img, predictions.str(), position,
-                cv::FONT_HERSHEY_COMPLEX_SMALL, 1., cv::Scalar(255, 255, 255),
-                3);
-    cv::putText(output_img, predictions.str(), position,
-                cv::FONT_HERSHEY_COMPLEX_SMALL, 1., color, 2);
+    draw_rect_prediction(ctx, font, detection, label_definitions);
   }
 
   for (auto &obj : result.polygons) {
-    auto br = cv::boundingRect(obj.shape);
-    auto position =
-        cv::Point2f(br.x + br.width / 2.0f, br.y + br.height / 2.0f);
-    std::ostringstream conf;
-    conf << ":" << std::fixed << std::setprecision(1)
-         << obj.labels[0].probability * 100 << '%';
-    std::vector<std::vector<cv::Point>> contours = {obj.shape};
-    cv::drawContours(output_img, contours, 0, 255);
-    cv::putText(output_img, obj.labels[0].label.label + conf.str(), position,
-                cv::FONT_HERSHEY_COMPLEX_SMALL, 1., cv::Scalar(255, 255, 255),
-                3);
-    cv::putText(output_img, obj.labels[0].label.label + conf.str(), position,
-                cv::FONT_HERSHEY_COMPLEX_SMALL, 1., color, 2);
   }
 
   for (auto &obj : result.rotated_rectangles) {
-    auto position = obj.shape.center;
-    std::ostringstream conf;
-    cv::Point2f vertices[4];
-    obj.shape.points(vertices);
-
-    for (int i = 0; i < 4; i++) {
-      cv::line(output_img, vertices[i], vertices[(i + 1) % 4], color);
-    }
-
-    conf << ":" << std::fixed << std::setprecision(1)
-         << obj.labels[0].probability * 100 << '%';
-
-    cv::putText(output_img, obj.labels[0].label.label + conf.str(), position,
-                cv::FONT_HERSHEY_COMPLEX_SMALL, 1., cv::Scalar(255, 255, 255),
-                3);
-    cv::putText(output_img, obj.labels[0].label.label + conf.str(), position,
-                cv::FONT_HERSHEY_COMPLEX_SMALL, 1., color, 2);
   }
 
   cc->Outputs().Tag("IMAGE").AddPacket(
-      MakePacket<cv::Mat>(output_img).At(cc->InputTimestamp()));
+      MakePacket<cv::Mat>(cv_image).At(cc->InputTimestamp()));
 
   return absl::OkStatus();
 }
