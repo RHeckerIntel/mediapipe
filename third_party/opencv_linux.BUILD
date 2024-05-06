@@ -35,6 +35,7 @@ cc_library(
         "-l:libopencv_features2d.so",
         "-l:libopencv_highgui.so",
         "-l:libopencv_imgcodecs.so",
+        "-l:libopencv_freetype.so",
         "-l:libopencv_imgproc.so",
         "-l:libopencv_video.so",
         "-l:libopencv_videoio.so",

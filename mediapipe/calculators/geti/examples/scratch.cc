@@ -1,15 +1,21 @@
 #include <iostream>
-#include <adapters/openvino_adapter.h>
 
-#include <models/detection_model.h>
-#include <models/input_data.h>
-#include <models/results.h>
+#include "mediapipe/framework/port/opencv_highgui_inc.h"
+#include "mediapipe/framework/port/opencv_imgproc_inc.h"
 
+#include <blend2d.h>
 
 int main() {
     std::cout << "hello world" << std::endl;
-    //auto core = ov::Core();
+    cv::Mat cv_input = cv::imread("/data/cattle.jpg");
+    cv::cvtColor(cv_input, cv_input, cv::COLOR_BGR2RGB); // this happens inside the ModelInferRequest
+    cv::Mat cv_image;
+    cv::cvtColor(cv_input, cv_image, cv::COLOR_RGB2BGRA);
+    BLImage img;
+    img.createFromData(cv_image.cols, cv_image.rows, BLFormat::BL_FORMAT_XRGB32, cv_image.data, cv_image.step);
 
-    //auto model = DetectionModel::create_model("C:/data/openvino.xml"); // works with SSD models. Download it using Python Model API
+    img.writeToFile("/data/output.png");
+
+
     return 0;
 }

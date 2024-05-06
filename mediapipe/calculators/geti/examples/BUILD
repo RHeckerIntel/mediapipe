@@ -24,8 +24,8 @@ cc_library(
 )
 
 cc_binary(
-    name = "anomaly_calculator_demo",
-    srcs = ["anomaly_calculator_demo.cc"],
+    name = "calculator_demo",
+    srcs = ["calculator_demo.cc"],
     data = [
         "//mediapipe/calculators/geti/graphs:graphs",
     ],
@@ -41,7 +41,7 @@ cc_binary(
         "//mediapipe/calculators/geti/graphs:graphs",
     ],
     deps = [
-        "@model_api//:model_api",
-        "@windows_openvino//:openvino",
+        ":demo_dependencies",
+        "@blend2d//:blend2d"
     ],
 )

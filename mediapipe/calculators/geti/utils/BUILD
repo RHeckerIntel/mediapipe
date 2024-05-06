@@ -136,6 +136,7 @@ cc_library(
         "//mediapipe/framework/port:opencv_core",
         "@model_api//:model_api",
         "//mediapipe/calculators/geti/inference:geti_calculator_base",
+        "//mediapipe/calculators/geti/serialization:serialization",
     ],
     alwayslink = 1,
 )

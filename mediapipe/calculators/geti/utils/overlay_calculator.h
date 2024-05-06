@@ -1,4 +1,3 @@
-
 /**
  *  INTEL CONFIDENTIAL
  *
@@ -14,6 +13,7 @@
  * or implied warranties, other than those that are expressly stated in the
  * License.
  */
+
 #ifndef OVERLAY_CALCULATOR_H
 #define OVERLAY_CALCULATOR_H
 
@@ -24,6 +24,7 @@
 
 #include "data_structures.h"
 #include "../inference/geti_calculator_base.h"
+#include "../serialization/project_serialization.h"
 #include "mediapipe/framework/calculator_framework.h"
 #include "mediapipe/framework/formats/image_frame.h"
 #include "mediapipe/framework/formats/image_frame_opencv.h"
@@ -40,6 +41,7 @@ namespace mediapipe {
 //
 // Output:
 //  IMAGE - cv::Mat, Input image with applied detection bounding boxes
+//
 //
 
 class OverlayCalculator : public GetiCalculatorBase {
