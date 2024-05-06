@@ -19,10 +19,12 @@ cmake(
     ],
     cache_entries = {
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
-        "BLEND2D_NO_JIT": "true",
     },
     lib_source = ":all_srcs",
     out_shared_libs = ["libblend2d.so"],
+    build_data = [
+        "@asmjit//:all_srcs"
+    ]
 )
 
 cc_library(

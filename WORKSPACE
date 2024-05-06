@@ -868,6 +868,13 @@ git_repository(
 )
 
 git_repository(
+    name = "asmjit",
+    remote = "https://github.com/asmjit/asmjit",
+    commit = "e5d7c0bd5d9aec44d68830187138149e6a8c4e32",
+    build_file = "//third_party:asmjit.BUILD",
+)
+
+git_repository(
     name = "blend2d",
     remote = "https://github.com/blend2d/blend2d",
     commit = "235997a8f829f54b56925c7332b8f0bc5b49bcf6",
