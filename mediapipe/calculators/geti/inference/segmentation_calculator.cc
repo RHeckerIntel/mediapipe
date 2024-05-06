@@ -91,7 +91,7 @@ absl::Status SegmentationCalculator::GetiProcess(CalculatorContext *cc) {
   }
 
   for (const auto &contour : model->getContours(inference)) {
-    std::vector<cv::Point> approxCurve;
+    std::vector<cv::Point2i> approxCurve;
     if (contour.shape.size() > 0) {
       cv::approxPolyDP(contour.shape, approxCurve, 1.0f, true);
       if (approxCurve.size() > 2) {

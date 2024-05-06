@@ -39,7 +39,7 @@ struct LabelResult {
 
 struct PolygonPrediction {
   std::vector<LabelResult> labels;
-  std::vector<cv::Point> shape;
+  std::vector<cv::Point2i> shape;
 };
 
 struct RectanglePrediction {

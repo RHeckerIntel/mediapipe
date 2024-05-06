@@ -33,8 +33,8 @@
 
 constexpr char kSidePacket[] = "model_path";
 constexpr char kDevice[] = "device";
-constexpr char kInputStream[] = "input_image";
-constexpr char kOutputStream[] = "output_image";
+constexpr char kInputStream[] = "input";
+constexpr char kOutputStream[] = "output";
 constexpr char kWindowName[] = "MediaPipe";
 constexpr float kMicrosPerSecond = 1e6;
 

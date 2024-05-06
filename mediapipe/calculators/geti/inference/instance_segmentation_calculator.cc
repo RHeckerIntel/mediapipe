@@ -108,7 +108,7 @@ absl::Status InstanceSegmentationCalculator::GetiProcess(
         }
       } else {
         auto mask = obj.mask.clone();
-        std::vector<std::vector<cv::Point>> contours;
+        std::vector<std::vector<cv::Point2i>> contours;
         cv::threshold(mask, mask, 1, 999, cv::THRESH_OTSU);
         cv::findContours(mask, contours, cv::RETR_EXTERNAL,
                          cv::CHAIN_APPROX_NONE);
@@ -117,7 +117,7 @@ absl::Status InstanceSegmentationCalculator::GetiProcess(
           LOG(INFO) << "findContours() returned no contours";
         } else {
           double biggest_area = 0.0;
-          std::vector<cv::Point> biggest_contour, approxCurve;
+          std::vector<cv::Point2i> biggest_contour, approxCurve;
           for (auto contour : contours) {
             double area = cv::contourArea(contour);
             if (biggest_area < area) {

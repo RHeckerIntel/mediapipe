@@ -6,6 +6,7 @@ cc_library(
     ],
     deps = [
         "//mediapipe/calculators/geti/utils:data_structures",
+        "//mediapipe/framework/port:opencv_imgcodecs",
         "//third_party/cpp-base64:cpp-base64",
         "@nlohmann_json//:json",
     ],

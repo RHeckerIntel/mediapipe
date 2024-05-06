@@ -134,6 +134,25 @@ cc_library(
     alwayslink=1,
 )
 
+proto_library(
+    name = "overlay_calculator_proto",
+    srcs = ["overlay_calculator.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//mediapipe/framework:calculator_proto",
+
+    ],
+)
+
+mediapipe_cc_proto_library(
+    name = "overlay_calculator_cc_proto",
+    srcs = ["overlay_calculator.proto"],
+    cc_deps = ["//mediapipe/framework:calculator_cc_proto"],
+    visibility = ["//visibility:public"],
+    deps = [":overlay_calculator_proto"],
+)
+
+
 cc_library(
     name = "overlay_calculator",
     srcs = [
@@ -152,6 +171,7 @@ cc_library(
         "@model_api//:model_api",
         "//mediapipe/calculators/geti/inference:geti_calculator_base",
         "//mediapipe/calculators/geti/serialization:serialization",
+        ":overlay_calculator_cc_proto",
     ],
     alwayslink = 1,
 )

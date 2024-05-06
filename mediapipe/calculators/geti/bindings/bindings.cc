@@ -71,6 +71,8 @@ DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, co
         model = ClassificationModel::create_model(model_path);
     } else if (model_type_str == "segmentation") {
         model = SegmentationModel::create_model(model_path);
+    } else if (model_type_str == "rotated_detection") {
+        model = MaskRCNNModel::create_model(model_path);
     } else if (model_type_str == "instance_segmentation") {
         model = MaskRCNNModel::create_model(model_path);
     } else if (model_type_str == "anomaly_detection") {

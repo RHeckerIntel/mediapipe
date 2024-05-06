@@ -879,5 +879,4 @@ git_repository(
     remote = "https://github.com/blend2d/blend2d",
     commit = "235997a8f829f54b56925c7332b8f0bc5b49bcf6",
     build_file = "//third_party:blend2d.BUILD",
-
 )

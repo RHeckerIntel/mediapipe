@@ -105,12 +105,12 @@ absl::Status AnomalyCalculator::Process(CalculatorContext *cc) {
       cv::Mat mask;
       cv::threshold(infer_result->pred_mask, mask, 0, 255, cv::THRESH_BINARY);
       double box_score;
-      std::vector<std::vector<cv::Point>> contours, approxCurve;
+      std::vector<std::vector<cv::Point2i>> contours, approxCurve;
       cv::findContours(mask, contours, cv::RETR_EXTERNAL,
                        cv::CHAIN_APPROX_SIMPLE);
 
       for (size_t i = 0; i < contours.size(); i++) {
-        std::vector<cv::Point> approx;
+        std::vector<cv::Point2i> approx;
         if (contours[i].size() > 0) {
           cv::approxPolyDP(contours[i], approx, 1.0f, true);
           if (approx.size() > 2) approxCurve.push_back(approx);

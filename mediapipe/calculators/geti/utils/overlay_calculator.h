@@ -22,6 +22,7 @@
 
 #include <vector>
 
+#include "overlay.h"
 #include "data_structures.h"
 #include "../inference/geti_calculator_base.h"
 #include "../serialization/project_serialization.h"
@@ -30,6 +31,7 @@
 #include "mediapipe/framework/formats/image_frame_opencv.h"
 #include "mediapipe/framework/port/opencv_core_inc.h"
 #include "mediapipe/framework/port/status.h"
+#include "mediapipe/calculators/geti/utils/overlay_calculator.pb.h"
 
 #include <blend2d.h>
 
@@ -55,6 +57,8 @@ class OverlayCalculator : public GetiCalculatorBase {
 
  private:
   BLFont font;
+  std::vector<geti::ProjectLabel> label_definitions = {};
+  DrawOptions drawOptions = {2.0, 0.4, 12.0};
 };
 
 }  // namespace mediapipe

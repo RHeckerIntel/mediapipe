@@ -14,8 +14,7 @@
  * License.
  */
 #include "overlay_calculator.h"
-
-#include "overlay.h"
+#include "../serialization/result_serialization.h"
 
 namespace mediapipe {
 
@@ -31,13 +30,44 @@ absl::Status OverlayCalculator::GetContract(CalculatorContract *cc) {
 absl::Status OverlayCalculator::Open(CalculatorContext *cc) {
   LOG(INFO) << "DetectionOverlayCalculator::Open()";
   cc->SetOffset(TimestampDiff(0));
+
+  const auto &options =
+      cc->Options<OverlayCalculatorOptions>();
+  for (auto &label: options.labels()) {
+    label_definitions.push_back(geti::ProjectLabel{
+      label.id(),
+      label.name(),
+      geti::hex_to_color(label.color()),
+      label.is_empty()});
+  }
+
+  if (options.has_font_size()) {
+    drawOptions.fontSize = options.font_size();
+  }
+
+  if (options.has_opacity()) {
+    drawOptions.opacity = options.opacity();
+  }
+
+  if (options.stroke_width()) {
+    drawOptions.strokeWidth = options.stroke_width();
+  }
+
+
   BLFontFace face;
   const char fontName[] = "/home/rhecker/Projects/blend2d_workspace/app/intelone-text-regular.ttf";
   BLResult result = face.createFromFile(fontName);
   if (result != BL_SUCCESS) {
       printf("Failed to load a font (err=%u)\n", result);
   }
-  font.createFromFace(face, 12.0f);
+  font.createFromFace(face, drawOptions.fontSize);
+
+
+
+
+  for (auto label: label_definitions) {
+    std::cout << label.name << std::endl;
+  }
 
   return absl::OkStatus();
 }
@@ -48,10 +78,9 @@ absl::Status OverlayCalculator::GetiProcess(CalculatorContext *cc) {
     return absl::OkStatus();
   }
 
-  std::vector<geti::ProjectLabel> label_definitions = geti::read_file("/home/rhecker/Projects/blend2d_workspace/app/project.json")["tasks"][0]["labels"];
   // Get inputs
   const cv::Mat &input_image = cc->Inputs().Tag("IMAGE").Get<cv::Mat>();
-  const auto result =
+  auto result =
       cc->Inputs().Tag("INFERENCE_RESULT").Get<geti::InferenceResult>();
 
   // Apply results
@@ -61,17 +90,21 @@ absl::Status OverlayCalculator::GetiProcess(CalculatorContext *cc) {
   BLImage img;
   img.createFromData(cv_image.cols, cv_image.rows, BLFormat::BL_FORMAT_XRGB32, cv_image.data, cv_image.step);
   BLContext ctx(img);
-  ctx.setStrokeWidth(2);
+  ctx.setStrokeWidth(drawOptions.strokeWidth);
 
   for (auto &detection : result.rectangles) {
-    draw_rect_prediction(ctx, font, detection, label_definitions);
+    draw_rect_prediction(ctx, font, detection, label_definitions, drawOptions);
   }
 
-  for (auto &obj : result.polygons) {
+  for (auto &polygon : result.polygons) {
+    draw_polygon_prediction(ctx, font, polygon, label_definitions, drawOptions);
   }
 
-  for (auto &obj : result.rotated_rectangles) {
+  for (auto &rotated_rect : result.rotated_rectangles) {
+    draw_rotated_rect_prediction(ctx, font, rotated_rect, label_definitions, drawOptions);
   }
+
+  ctx.end();
 
   cc->Outputs().Tag("IMAGE").AddPacket(
       MakePacket<cv::Mat>(cv_image).At(cc->InputTimestamp()));

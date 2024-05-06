@@ -24,6 +24,7 @@ std::string GraphRunner::Get() {
     if (running && poller->Next(&output_packet)) {
         std::cout << " whoop new package " << std::endl;
         cv::Mat output_image = output_packet.Get<cv::Mat>();
+        cv::cvtColor(output_image, output_image, cv::COLOR_BGR2RGB);
         return geti::base64_encode_mat(output_image);
     }
     return "";

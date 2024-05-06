@@ -26,7 +26,7 @@ cc_library(
     ],
     copts = ["-fPIC"],  # Ensure position-independent code
     alwayslink=1,
-    linkopts = ["-Wl,-rpath,./lib"],
+    linkopts = ["-Wl,-rpath,$$ORIGIN/lib"],
 )
 
 cc_binary(
