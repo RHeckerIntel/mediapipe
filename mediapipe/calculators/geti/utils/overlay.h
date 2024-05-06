@@ -35,7 +35,13 @@ inline double draw_label(BLContext &ctx, const BLFont& font, const BLRgba32& col
 
 
     ctx.fillRect(textArea, color);
-    ctx.setFillStyle(BLRgba32(0xFFFFFFFF));
+
+    float luminance = (0.299f*color.r() + 0.587f*color.g() + 0.114f*color.b());
+    if (luminance < 128) {
+      ctx.setFillStyle(BLRgba32(0xFFFFFFFF));
+    } else {
+      ctx.setFillStyle(BLRgba32(0xFF000000));
+    }
     ctx.fillUtf8Text(BLPoint(bl.x + padding - 1, bl.y - padding - fontMetrics.descent), font, label_text.c_str());
 
     return textArea.w;
