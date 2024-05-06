@@ -121,6 +121,20 @@ cc_test(
 )
 
 cc_library(
+    name = "overlay",
+    hdrs = [
+        "overlay.h"
+    ],
+    deps = [
+        "@blend2d//:blend2d",
+        ":data_structures",
+        "//mediapipe/framework/port:opencv_highgui",
+        "//mediapipe/framework/port:opencv_imgproc",
+    ],
+    alwayslink=1,
+)
+
+cc_library(
     name = "overlay_calculator",
     srcs = [
         "overlay_calculator.cc",

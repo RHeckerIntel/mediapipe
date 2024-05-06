@@ -3,7 +3,7 @@
 
 #include <nlohmann/json.hpp>
 #include <string>
-#include "mediapipe/framework/port/opencv_core_inc.h"
+#include <blend2d.h>
 #include <fstream>
 
 namespace geti {
@@ -19,7 +19,7 @@ class ProjectLabel {
 public:
   std::string id;
   std::string name;
-  cv::Scalar color;
+  BLRgba32 color;
   bool is_empty;
 };
 
@@ -34,19 +34,11 @@ inline const ProjectLabel &get_label_by_id(const std::string &id,
 }
 
 
-
-inline cv::Scalar hex_to_color(std::string color) {
+BLRgba32 hex_to_color(std::string color) {
   std::stringstream ss;
   color.erase(0, 1);
   unsigned int x = std::stoul("0x" + color, nullptr, 16);
-
-  float r,g,b,a;
-  r = ((x >> 24) & 0xFF);
-  g = ((x >> 16) & 0xFF);
-  b = ((x >> 8) & 0xFF);
-  a = ((x) & 0xFF);
-
-  return cv::Scalar(b, g, r, a);
+  return BLRgba32(x >> 8 | (x & 0x000000FF) << 24);
 }
 
 inline void from_json(const nlohmann ::json &nlohmann_json_j,

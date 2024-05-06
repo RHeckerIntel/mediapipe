@@ -41,7 +41,7 @@ cc_binary(
         "//mediapipe/calculators/geti/graphs:graphs",
     ],
     deps = [
-        ":demo_dependencies",
-        "@blend2d//:blend2d"
+        "//mediapipe/calculators/geti/utils:overlay",
+        "//mediapipe/calculators/geti/serialization:serialization",
     ],
 )
