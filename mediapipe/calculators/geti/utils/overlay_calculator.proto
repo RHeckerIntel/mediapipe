@@ -27,10 +27,10 @@ message OverlayLabel {
 }
 
 message OverlayCalculatorOptions {
-    extend mediapipe.CalculatorOptions {
-        optional OverlayCalculatorOptions ext = 125115991;
-    }
-    repeated OverlayLabel labels = 1;
+  extend mediapipe.CalculatorOptions {
+      optional OverlayCalculatorOptions ext = 125115991;
+  }
+  repeated OverlayLabel labels = 1;
   optional double stroke_width = 2;
   optional double opacity = 3;
   optional double font_size = 4;

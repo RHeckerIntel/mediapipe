@@ -11,7 +11,7 @@ struct DrawOptions {
   double fontSize;
 };
 
-inline double draw_label(BLContext &ctx, const BLFont& font, const BLRgba32& color, const std::string label_text, const BLPoint& bl) {
+inline double draw_label(BLContext &ctx, const BLFont& font, const BLRgba32& color, const std::string label_text, BLPoint bl) {
     //std::string label_text = label_info.name + " " + std::to_string((int) round(label.probability * 100)) + "%";
     BLGlyphBuffer buffer;
     BLFontMetrics fontMetrics = font.metrics();
@@ -28,10 +28,16 @@ inline double draw_label(BLContext &ctx, const BLFont& font, const BLRgba32& col
     }
 
 
-    float height = fontMetrics.ascent + fontMetrics.descent;
-    float width = metrics.boundingBox.x1 - metrics.boundingBox.x0;
     float padding = 4.0f;
-    BLRect textArea{ bl.x - 1, bl.y - padding * 2 - height, width + padding * 2 , height + padding * 2}; //1 for border?
+    float height = fontMetrics.ascent + fontMetrics.descent + padding * 2;
+    float width = metrics.boundingBox.x1 - metrics.boundingBox.x0 + padding * 2 ;
+
+    if (bl.y - height < 0) {
+      bl.y = height;
+    }
+
+
+    BLRect textArea{ bl.x - 1, bl.y - height, width , height}; //1 for border?
 
 
     ctx.fillRect(textArea, color);

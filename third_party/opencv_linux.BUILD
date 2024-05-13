@@ -36,6 +36,8 @@ cc_library(
         "-l:libopencv_highgui.so",
         "-l:libopencv_imgcodecs.so",
         "-l:libopencv_imgproc.so",
+        "-l:libopencv_video.so",
+        "-l:libopencv_videoio.so",
         "-l:libopencv_optflow.so",
     ],
     visibility = ["//visibility:public"],

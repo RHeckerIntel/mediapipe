@@ -16,6 +16,6 @@
 #define MEDIAPIPE_PORT_OPENCV_VIDEOIO_INC_H_
 
 #include "mediapipe/framework/port/opencv_core_inc.h"
-#include "third_party/OpenCV/videoio.hpp"
+#include <opencv2/videoio/videoio.hpp>
 
 #endif  // MEDIAPIPE_PORT_OPENCV_VIDEOIO_INC_H_

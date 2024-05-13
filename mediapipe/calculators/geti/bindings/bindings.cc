@@ -40,8 +40,8 @@ DLLEXPORT void GraphRunner_Close(void* instance) {
 
 
 DLLEXPORT const char* GraphRunner_Get(CGraphRunner instance) {
-    static std::string result = reinterpret_cast<geti::GraphRunner*>(instance)->Get();
-    return result.c_str();
+    auto result = new std::string(reinterpret_cast<geti::GraphRunner*>(instance)->Get());
+    return result->c_str();
 }
 
 DLLEXPORT void GraphRunner_Queue(CGraphRunner instance, const char* image_data, const size_t data_length) {

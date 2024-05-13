@@ -31,7 +31,11 @@ refresh_compile_commands(
     targets = {
       #"//:my_output_1": "--important_flag1 --important_flag2=true",
       #"//:my_output_2": "",
-        "//mediapipe/calculators/geti/examples:demo_dependencies": "",
+        "//mediapipe/calculators/geti/bindings/..." : "",
+        "//mediapipe/calculators/geti/examples/...": "",
+        "//mediapipe/calculators/geti/inference/...": "",
+        "//mediapipe/calculators/geti/utils/...": "",
+        "//mediapipe/calculators/geti/serialization/...": "",
     },
     # No need to add flags already in .bazelrc. They're automatically picked up.
     # If you don't need flags, a list of targets is also okay, as is a single target string.

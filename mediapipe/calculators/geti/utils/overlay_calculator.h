@@ -56,9 +56,9 @@ class OverlayCalculator : public GetiCalculatorBase {
   absl::Status Close(CalculatorContext *cc) override;
 
  private:
-  BLFont font;
+  BLFontFace face;
   std::vector<geti::ProjectLabel> label_definitions = {};
-  DrawOptions drawOptions = {2.0, 0.4, 12.0};
+  DrawOptions drawOptions = {2.0, 0.4, 1.0};
 };
 
 }  // namespace mediapipe

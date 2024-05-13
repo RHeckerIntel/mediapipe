@@ -48,7 +48,8 @@ void GraphRunner::Queue(const std::vector<char>& image_data) {
 }
 
 void GraphRunner::Stop() {
-    graph->WaitUntilIdle();
+    graph->Cancel();
+    //graph->WaitUntilIdle();
     running = false;
 }
 

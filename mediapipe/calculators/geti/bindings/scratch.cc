@@ -1,93 +1,112 @@
 #include "bindings.h"
-#include <iostream>
 #include <fstream>
-#include <vector>
+#include <iostream>
 #include <sstream>
+#include <vector>
 
 #include <thread>
 
-void handle_input(const char* message) {
-    std::cout << "got output message" << std::endl;
+#include "mediapipe/calculators/geti/bindings/graph_runner.h"
+#include "mediapipe/framework/port/opencv_highgui_inc.h"
+#include "mediapipe/framework/port/parse_text_proto.h"
+
+/*
+#include "mediapipe/framework/port/opencv_highgui_inc.h"
+#include "mediapipe/framework/port/opencv_imgproc_inc.h"
+#include "mediapipe/framework/port/opencv_videoio_inc.h"
+
+
+void video_stuff() {
+  cv::VideoCapture cap;
+  cv::Mat frame;
+
+  int deviceID = 0;
+  cap.open(deviceID);
+  if (!cap.isOpened()) {
+    std::cerr << "ERROR! Unable to open camera\n";
+    return;
+  }
+
+  cap.read(frame);
+  cv::imwrite("/data/output.png", frame);
+  cap.release();
+}
+*/
+
+static const char *graph_content = R"pb(
+output_stream : "output"
+
+node {
+    calculator : "OpenVINOInferenceAdapterCalculator"
+    output_side_packet : "INFERENCE_ADAPTER:adapter"
+    node_options: {
+        [type.googleapis.com/mediapipe.OpenVINOInferenceAdapterCalculatorOptions] {
+            model_path: "/data/omz_models/intel/face-detection-retail-0004/face-detection-retail-0004.xml"
+        }
+    }
 }
 
-void listen_task(void* instance) {
-    GraphRunner_Listen(instance, handle_input);
+node {
+    calculator : "VideoInputCalculator"
+    output_stream: "IMAGE:input_image"
 }
 
-static const char* graph = R"pb(
- input_stream : "input"
-          output_stream : "output"
+node {
+    calculator : "DetectionCalculator"
+    input_side_packet : "INFERENCE_ADAPTER:adapter"
+    input_stream : "IMAGE:input_image"
+    output_stream: "INFERENCE_RESULT:inference_detections"
+}
 
-
-          node {
-          calculator : "OpenVINOInferenceAdapterCalculator"
-          output_side_packet : "INFERENCE_ADAPTER:adapter_0"
-          node_options: {
-            [type.googleapis.com/mediapipe.OpenVINOInferenceAdapterCalculatorOptions] {
-                model_path: "/data/geti/detection_ssd.xml"
+node {
+    calculator : "OverlayCalculator"
+    input_stream : "IMAGE:input_image"
+    input_stream : "INFERENCE_RESULT:inference_detections"
+    output_stream: "IMAGE:output"
+    node_options: {
+        [type.googleapis.com/mediapipe.OverlayCalculatorOptions] {
+            labels: {
+                id: "face"
+                name: "face"
+                color: "#f7dab3ff"
+                is_empty: false
             }
-          }
-          }
 
-        node {
-          calculator : "DetectionCalculator"
-          input_side_packet : "INFERENCE_ADAPTER:adapter_0"
-          input_stream : "IMAGE:input"
-          output_stream: "INFERENCE_RESULT:result"
+            stroke_width: 2
+            opacity: 0.4
+            font_size: 1.0
         }
-
-        node {
-          calculator : "OverlayCalculator"
-          input_stream : "IMAGE:input"
-          input_stream : "INFERENCE_RESULT:result"
-          output_stream : "IMAGE:output"
-        }
-        )pb";
+    }
+}
+)pb";
 
 int main() {
-    std::cout << "scratch" << std::endl;
+  std::cout << "scratch" << std::endl;
 
-    //auto image = cv::imread(image_path);
-    //std::cout << image.size() << std::endl;
+  std::shared_ptr<mediapipe::OutputStreamPoller> poller;
+  std::shared_ptr<mediapipe::CalculatorGraph> graph;
 
-    //// yuck...
-    //std::vector<uchar> buf;
-    //cv::imencode(".jpg", image, buf);
-    //std::vector<char> image_data(buf.begin(), buf.end());
+  mediapipe::CalculatorGraphConfig graph_config =
+      mediapipe::ParseTextProtoOrDie<mediapipe::CalculatorGraphConfig>(
+          absl::Substitute(graph_content));
+  graph = std::make_shared<mediapipe::CalculatorGraph>(graph_config);
 
+  poller = std::unique_ptr<mediapipe::OutputStreamPoller>(
+      new mediapipe::OutputStreamPoller(
+          graph->AddOutputStreamPoller("output").value()));
+  // graph->Initialize(graph_config);
+  graph->StartRun({});
 
-    //SerializeModel("C:/Users/selse/AppData/Roaming/intel.geti/inference/65c49dc49467d132a02da500/model.xml", "classification", "C:/Users/selse/AppData/Roaming/intel.geti/inference/65c49dc49467d132a02da500/serialized.xml");
-
-    SerializeModel(
-        "/home/rhecker/.local/share/com.example.inference/662baad4ac9c95a4518c0aaa/662baad8ac9c95a4518c0aae_model.xml",
-        "instance_segmentation",
-        "/home/rhecker/.local/share/com.example.inference/662baad4ac9c95a4518c0aaa/662baad8ac9c95a4518c0aae.xml"
-        );
-
-    {
-        std::ifstream image_file("/data/cattle.jpg", std::ifstream::binary);
-        ////std::vector<char> image_data((std::istreambuf_iterator<char>(image_file)), std::istreambuf_iterator<char>());
-        std::stringstream ss;
-        ss << image_file.rdbuf();
-
-        std::string data = ss.str();
-        std::string result = GraphRunner_Run(graph, data.c_str(), data.size());
+  mediapipe::Packet output_packet;
+  for (int i = 0; i < 20; i++) {
+    std::string path = "/data/video/output_" + std::to_string(i) + ".png";
+    if (poller->Next(&output_packet)) {
+        std::cout << path << std::endl;
+        cv::Mat output_image = output_packet.Get<cv::Mat>();
+        cv::cvtColor(output_image, output_image, cv::COLOR_BGR2RGB);
+        cv::imwrite(path, output_image);
     }
+  }
 
-    //std::cout << "graph open style: " << std::endl;
-    //auto instance = GraphRunner_Open("detection", "C:/data/detection_ssd.xml");
-    //std::thread t1(listen_task, instance);
-    //for ( int i = 0; i < 10; i++ ) {
-    //    GraphRunner_Queue(instance, "C:/data/cattle.jpg");
-    //}
-
-    //std::this_thread::sleep_for(std::chrono::seconds(1));
-
-    //GraphRunner_Queue(instance, "C:/data/cattle.jpg");
-
-
-    //GraphRunner_Close(instance);
-
-    //t1.join();
-    return 0;
+  return 0;
 }
