@@ -13,7 +13,8 @@ cc_library(
         ":overlay_calculator",
         ":detection_extraction_calculator",
         ":combiner_calculators",
-        ":emptylabel_calculators"
+        ":emptylabel_calculators",
+        ":video_input_calculator",
     ],
     alwayslink = 1,
 )
@@ -87,6 +88,22 @@ cc_library(
         "//mediapipe/calculators/geti/inference:inference_utils",
     ],
     alwayslink = 1
+)
+
+cc_library(
+    name = "video_input_calculator",
+    srcs = [
+        "video_input_calculator.cc",
+    ],
+    hdrs = [
+        "video_input_calculator.h",
+    ],
+    deps = [
+        "//mediapipe/framework:calculator_framework",
+        "//mediapipe/framework/port:opencv_videoio",
+        "//mediapipe/calculators/geti/inference:geti_calculator_base",
+    ],
+    alwayslink = 1,
 )
 
 cc_library(

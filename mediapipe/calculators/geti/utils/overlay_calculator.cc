@@ -15,6 +15,7 @@
  */
 #include "overlay_calculator.h"
 #include "../serialization/result_serialization.h"
+#include <filesystem>
 
 namespace mediapipe {
 
@@ -54,13 +55,12 @@ absl::Status OverlayCalculator::Open(CalculatorContext *cc) {
   }
 
 
-  BLFontFace face;
+  std::cout << std::filesystem::current_path() << std::endl;
   const char fontName[] = "/home/rhecker/Projects/blend2d_workspace/app/intelone-text-regular.ttf";
   BLResult result = face.createFromFile(fontName);
   if (result != BL_SUCCESS) {
       printf("Failed to load a font (err=%u)\n", result);
   }
-  font.createFromFace(face, drawOptions.fontSize);
 
 
 
@@ -91,6 +91,9 @@ absl::Status OverlayCalculator::GetiProcess(CalculatorContext *cc) {
   img.createFromData(cv_image.cols, cv_image.rows, BLFormat::BL_FORMAT_XRGB32, cv_image.data, cv_image.step);
   BLContext ctx(img);
   ctx.setStrokeWidth(drawOptions.strokeWidth);
+  BLFont font;
+  int longest_side = std::max(cv_image.cols, cv_image.rows);
+  font.createFromFace(face, longest_side * 0.01 * drawOptions.fontSize);
 
   for (auto &detection : result.rectangles) {
     draw_rect_prediction(ctx, font, detection, label_definitions, drawOptions);
