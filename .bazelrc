@@ -126,5 +126,5 @@ coverage --cxxopt=-DOVMS_DUMP_TO_FILE=0
 test --cxxopt=-DOVMS_DUMP_TO_FILE=0
 
 # Show color highlighting in errors
-build --copt=-fdiagnostics-color=always
-run --copt=-fdiagnostics-color=always
+build:linux --copt=-fdiagnostics-color=always
+run:linux --copt=-fdiagnostics-color=always

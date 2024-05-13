@@ -14,14 +14,16 @@ cmake(
         "--",  # <- Pass remaining options to the native tool.
         # https://github.com/bazelbuild/rules_foreign_cc/issues/329
         # there is no elegant paralell compilation support
-        "VERBOSE=1",
         "-j 4",
     ],
     cache_entries = {
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
     },
     lib_source = ":all_srcs",
-    out_shared_libs = ["libblend2d.so"],
+    out_shared_libs = select({
+        "@bazel_tools//src/conditions:windows": ["blend2d.dll"],
+        "//conditions:default": ["libblend2d.so"],
+    }),
     build_data = [
         "@asmjit//:all_srcs"
     ]

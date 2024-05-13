@@ -77,18 +77,27 @@ cmake(
     tags = ["requires-network"]
 )
 
+cc_library(
+    name = "model_api_linux",
+    deps = [
+        "@mediapipe//mediapipe/framework/port:opencv_core",
+        "@linux_openvino//:openvino",
+        ":model_api_cmake_linux",
+    ],
+    visibility = ["//visibility:public"],
+)
 
 cc_library(
     name = "model_api",
     deps = [
         "@mediapipe//mediapipe/framework/port:opencv_core",
-        #"@windows_openvino//:openvino",
-        #":model_api_cmake_windows",
-        ":model_api_cmake_linux",
-        "@linux_openvino//:openvino",
+        "@windows_openvino//:openvino",
+        ":model_api_cmake_windows",
     ],
     visibility = ["//visibility:public"],
 )
+
+
 
 """
     repository_ctx.file("BUILD", build_file_content.format(http_proxy=http_proxy, https_proxy=https_proxy))
