@@ -34,4 +34,5 @@ message OverlayCalculatorOptions {
   optional double stroke_width = 2;
   optional double opacity = 3;
   optional double font_size = 4;
+  required string font_path = 5;
 }

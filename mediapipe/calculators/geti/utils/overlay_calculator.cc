@@ -54,10 +54,9 @@ absl::Status OverlayCalculator::Open(CalculatorContext *cc) {
     drawOptions.strokeWidth = options.stroke_width();
   }
 
-
   std::cout << std::filesystem::current_path() << std::endl;
-  const char fontName[] = "/home/rhecker/Projects/blend2d_workspace/app/intelone-text-regular.ttf";
-  BLResult result = face.createFromFile(fontName);
+  std::string fontPath = options.font_path();
+  BLResult result = face.createFromFile(fontPath.c_str());
   if (result != BL_SUCCESS) {
       printf("Failed to load a font (err=%u)\n", result);
   }
