@@ -56,13 +56,15 @@ inline double draw_label(BLContext &ctx, const BLFont& font, const BLRgba32& col
 inline void draw_rect_prediction(BLContext &ctx, const BLFont& font, const geti::RectanglePrediction &prediction,
                      const std::vector<geti::ProjectLabel> &label_definitions, const DrawOptions &drawOptions) {
 
-  BLRect rect{prediction.shape.x, prediction.shape.y, prediction.shape.width,
-              prediction.shape.height};
+  BLRect rect{(double)prediction.shape.x, (double)prediction.shape.y, (double)prediction.shape.width,
+              (double)prediction.shape.height};
   bool rect_drawn = false;
+  bool fullImageRect = ctx.targetWidth() == rect.w && ctx.targetHeight() == rect.h;
   double offset = 0.0;
   for (auto &label : prediction.labels) {
     const auto &label_info = get_label_by_id(label.label.label_id, label_definitions);
-    if (!rect_drawn) {
+
+    if (!fullImageRect && !rect_drawn) {
       auto fill_color = label_info.color;
       fill_color.setA(255 * drawOptions.opacity);
       ctx.fillRect(rect, fill_color);
