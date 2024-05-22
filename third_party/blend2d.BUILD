@@ -24,6 +24,7 @@ cmake(
         "@bazel_tools//src/conditions:windows": ["blend2d.dll"],
         "//conditions:default": ["libblend2d.so"],
     }),
+    out_static_libs = ["blend2d.lib"],
     build_data = [
         "@asmjit//:all_srcs"
     ]
@@ -31,8 +32,16 @@ cmake(
 
 cc_library(
     name = "blend2d",
-    deps = [
-        ":blend2d_cmake",
-    ],
+    srcs = glob([
+         "bin/blend2d.dll",
+         "lib/blend2d.lib",
+    ]),
+    hdrs = glob([
+        "include/**/*.*"
+    ]),
+    strip_include_prefix = "include",
+    #deps = [
+    #    ":blend2d_cmake",
+    #],
     visibility = ["//visibility:public"],
 )

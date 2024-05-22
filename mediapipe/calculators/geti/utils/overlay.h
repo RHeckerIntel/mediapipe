@@ -40,7 +40,8 @@ inline double draw_label(BLContext &ctx, const BLFont& font, const BLRgba32& col
     BLRect textArea{ bl.x - 1, bl.y - height, width , height}; //1 for border?
 
 
-    ctx.fillRect(textArea, color);
+    ctx.setFillStyle(color);
+    ctx.fillRect(textArea);
 
     float luminance = (0.299f*color.r() + 0.587f*color.g() + 0.114f*color.b());
     if (luminance < 128) {
@@ -67,9 +68,11 @@ inline void draw_rect_prediction(BLContext &ctx, const BLFont& font, const geti:
     if (!fullImageRect && !rect_drawn) {
       auto fill_color = label_info.color;
       fill_color.setA(255 * drawOptions.opacity);
-      ctx.fillRect(rect, fill_color);
+      ctx.setFillStyle(fill_color);
+      ctx.fillRect(rect);
       auto border_color = label_info.color;
-      ctx.strokeRect(rect, label_info.color);
+      ctx.setStrokeStyle(label_info.color);
+      ctx.strokeRect(rect);
       rect_drawn = true;
     }
 

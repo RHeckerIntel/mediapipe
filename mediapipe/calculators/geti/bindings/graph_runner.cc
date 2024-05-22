@@ -10,7 +10,6 @@ bool GraphRunner::OpenGraph(const std::string& graph_content) {
     graph = std::make_shared<mediapipe::CalculatorGraph>(graph_config);
 
     poller = std::unique_ptr<mediapipe::OutputStreamPoller>(new mediapipe::OutputStreamPoller(graph->AddOutputStreamPoller("output").value()));
-    //graph->Initialize(graph_config);
     graph->StartRun({});
     running = true;
 
@@ -22,10 +21,7 @@ bool GraphRunner::OpenGraph(const std::string& graph_content) {
 std::string GraphRunner::Get() {
     mediapipe::Packet output_packet;
     if (running && poller->Next(&output_packet)) {
-        std::cout << " whoop new package " << std::endl;
-        cv::Mat output_image = output_packet.Get<cv::Mat>();
-        cv::cvtColor(output_image, output_image, cv::COLOR_BGR2RGB);
-        return geti::base64_encode_mat(output_image);
+        return output_packet.Get<std::string>();
     }
     return "";
 }
@@ -34,8 +30,7 @@ void GraphRunner::Listen(const std::function<void(const std::string&)> callback)
     mediapipe::Packet output_packet;
     while (running && poller->Next(&output_packet)) {
         std::cout << " whoop new package " << std::endl;
-        cv::Mat output_image = output_packet.Get<cv::Mat>();
-        callback(geti::base64_encode_mat(output_image));
+        callback(output_packet.Get<std::string>());
     }
 }
 
