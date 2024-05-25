@@ -1,0 +1,25 @@
+input_stream: "input"
+output_stream: "output"
+
+#node {
+#    calculator : "LLMCalculator"
+#    input_stream : "PROMPT:input"
+#    # input_stream : "HISTORY:previous_conversation"
+#    #input_stream_info: {
+#    #    tag_index: ':1'  # 'HISTORY'
+#    #    back_edge: true
+#    #}
+#    output_stream: "TOKEN:token"
+#    # output_stream : "HISTORY:previous_conversation"
+#
+#}
+
+node {
+    calculator : "TestCalculator"
+    input_stream : "PROMPT:input"
+    output_stream : "TOKEN:output"
+    #input_stream_handler {
+    #    input_stream_handler: 'EarlyCloseInputStreamHandler'
+    #}
+
+}
