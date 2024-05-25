@@ -20,11 +20,11 @@ absl::Status startConversation(const std::string& graph_path) {
   std::unique_ptr<mediapipe::CalculatorGraph> graph =
       absl::make_unique<mediapipe::CalculatorGraph>();
   MP_RETURN_IF_ERROR(graph->Initialize(graph_config));
-  //ASSIGN_OR_RETURN(mediapipe::OutputStreamPoller poller, graph->AddOutputStreamPoller("output"));
-  graph->ObserveOutputStream("output", [&](const mediapipe::Packet& packet) {
-    std::cout << packet.Timestamp() << ": " << packet.Get<std::string>() << std::endl;
-    return absl::OkStatus();
-  });
+  ASSIGN_OR_RETURN(mediapipe::OutputStreamPoller poller, graph->AddOutputStreamPoller("output"));
+  //graph->ObserveOutputStream("output", [&](const mediapipe::Packet& packet) {
+  //  std::cout << packet.Timestamp() << ": " << packet.Get<std::string>() << std::endl;
+  //  return absl::OkStatus();
+  //});
 
   graph->StartRun({});
   //graph->
@@ -38,19 +38,29 @@ absl::Status startConversation(const std::string& graph_path) {
 //std::cout << prompt;
 
 
-  graph->AddPacketToInputStream("input", mediapipe::MakePacket<std::string>(prompt).At(timestamp));
 
+  const std::string SPECIAL_EOS_WORD = "</s>";
+  while(true) {
+    std::cout << "User: ";
+    getline(std::cin, prompt);
 
-    //mediapipe::Packet packet;
-    //std::cout << "wating..."  << std::endl;
-    //while(poller.Next(&packet)) {
-    //  std::cout << packet.Timestamp() << ": " << packet.Get<std::string>() << std::endl;
-    //}
+    std::string word = "";
+    while(word != SPECIAL_EOS_WORD) {
+      graph->AddPacketToInputStream("input", mediapipe::MakePacket<std::string>(prompt).At(timestamp));
+      mediapipe::Packet packet;
+      poller.Next(&packet);
+      word = packet.Get<std::string>();
+      std::cout << word.size() << std::endl;
+      std::cout << word << std::endl;
+      prompt = "";
+      ++timestamp;
+    }
+  }
 
+  std::cout << "Done" << std::endl;
 
   graph->CloseAllInputStreams();
   graph->WaitUntilIdle();
-  //}
 
   return absl::OkStatus();
 }

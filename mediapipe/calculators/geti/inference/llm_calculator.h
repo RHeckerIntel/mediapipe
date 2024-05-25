@@ -66,6 +66,24 @@ class LLMCalculator : public GetiCalculatorBase {
 
   std::pair<ov::Tensor, ov::Tensor> tokenize(std::string&& prompt);
   std::string detokenize(std::vector<int64_t>& tokens);
+
+ private: // llm state stuff
+  geti::History history;
+  size_t seq_len;
+  size_t print_len;
+  int64_t out_token;
+  float* logits;
+  size_t vocab_size;
+  ov::InferRequest lm;
+  ov::Tensor position_ids;
+  std::string text;
+  std::vector<int64_t> token_cache;
+
+
+
+  int64_t SPECIAL_EOS_TOKEN;
+  static constexpr size_t BATCH_SIZE = 1;
+  static constexpr size_t max_sequence_length = 1000;
 };
 }  // namespace mediapipe
 
