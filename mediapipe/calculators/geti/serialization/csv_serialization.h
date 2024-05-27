@@ -25,8 +25,8 @@ inline std::vector<std::string> to_csv(const RectanglePrediction& prediction) {
         std::vector<std::string> columns = {
             prediction.labels[0].label.label,
             prediction.labels[0].label.label_id,
-            "rectangle",
             std::to_string(prediction.labels[0].probability),
+            "rectangle",
             std::to_string(prediction.shape.x),
             std::to_string(prediction.shape.y),
             std::to_string(prediction.shape.width),

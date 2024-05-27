@@ -38,7 +38,15 @@ BLRgba32 hex_to_color(std::string color) {
   std::stringstream ss;
   color.erase(0, 1);
   unsigned int x = std::stoul("0x" + color, nullptr, 16);
-  return BLRgba32(x >> 8 | (x & 0x000000FF) << 24);
+  auto output = BLRgba32(
+    x >> 8 | (x & 0x000000FF) << 24
+  );
+
+  auto b = output.r();
+  output.setR(output.b());
+  output.setB(b);
+  return output;
+
 }
 
 inline void from_json(const nlohmann ::json &nlohmann_json_j,
