@@ -44,6 +44,7 @@ cc_library(
         "openvino_inference_adapter_calculator.cc",
         "rotated_detection_calculator.cc",
         "segmentation_calculator.cc",
+        "llm_calculator.cc",
         "model_infer_request_image_calculator.cc",
     ],
     hdrs = [
@@ -55,6 +56,7 @@ cc_library(
         "openvino_inference_adapter_calculator.h",
         "rotated_detection_calculator.h",
         "segmentation_calculator.h",
+        "llm_calculator.h",
         "model_infer_request_image_calculator.h",
     ],
     deps = [

@@ -23,6 +23,17 @@ cc_library(
     ]
 )
 
+cc_library(
+    name = "test_calculator",
+    srcs = ["test_calculator.cc"],
+    hdrs = ["test_calculator.h"],
+    deps = [
+        "//mediapipe/framework:calculator_framework",
+    ],
+    alwayslink=1
+
+)
+
 cc_binary(
     name = "calculator_demo",
     srcs = ["calculator_demo.cc"],
@@ -31,6 +42,18 @@ cc_binary(
     ],
     deps = [
         ":demo_dependencies",
+    ],
+)
+
+cc_binary(
+    name = "llm_demo",
+    srcs = ["llm_demo.cc"],
+    data = [
+        "//mediapipe/calculators/geti/graphs:graphs",
+    ],
+    deps = [
+        ":demo_dependencies",
+        ":test_calculator",
     ],
 )
 
