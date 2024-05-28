@@ -20,6 +20,7 @@ bool GraphRunner::OpenGraph(const std::string& graph_content) {
 
 std::string GraphRunner::Get() {
     mediapipe::Packet output_packet;
+    std::cout << "getting..." << std::endl;
     if (running && poller->Next(&output_packet)) {
         return output_packet.Get<std::string>();
     }
@@ -39,6 +40,14 @@ void GraphRunner::Queue(const std::vector<char>& image_data) {
     auto image = cv::imdecode(image_data, 1);
     std::cout << "image properties: " << image.size() << std::endl;
     auto packet = mediapipe::MakePacket<cv::Mat>(image).At(mediapipe::Timestamp(++timestamp));
+    graph->AddPacketToInputStream("input", packet);
+}
+
+void GraphRunner::Queue(const std::string& input) {
+    std::cout << "queued..." << std::endl;
+    std::cout << input << std::endl;
+    auto packet = mediapipe::MakePacket<std::string>(input).At(mediapipe::Timestamp(++timestamp));
+    std::cout << "created packet" << std::endl;
     graph->AddPacketToInputStream("input", packet);
 }
 

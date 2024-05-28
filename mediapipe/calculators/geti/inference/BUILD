@@ -31,6 +31,24 @@ mediapipe_cc_proto_library(
     deps = [":openvino_inference_adapter_calculator_proto"],
 )
 
+proto_library(
+    name = "llm_calculator_proto",
+    srcs = ["llm_calculator.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//mediapipe/framework:calculator_proto",
+
+    ],
+)
+
+mediapipe_cc_proto_library(
+    name = "llm_calculator_cc_proto",
+    srcs = ["llm_calculator.proto"],
+    cc_deps = ["//mediapipe/framework:calculator_cc_proto"],
+    visibility = ["//visibility:public"],
+    deps = [":llm_calculator_proto"],
+)
+
 cc_library(
     name = "inference_calculators",
     visibility = [
@@ -61,6 +79,7 @@ cc_library(
     ],
     deps = [
         ":openvino_inference_adapter_calculator_cc_proto",
+        ":llm_calculator_cc_proto",
         ":grpc_predict_v2_cc_proto",
         "//mediapipe/framework:calculator_framework",
         "//mediapipe/framework/formats:image_frame_opencv",

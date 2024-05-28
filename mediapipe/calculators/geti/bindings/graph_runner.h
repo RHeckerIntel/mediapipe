@@ -25,6 +25,7 @@ class GraphRunner  {
   std::string Get();
   void Listen(const std::function<void(const std::string&)> callback);
   void Queue(const std::vector<char>& image_data);
+  void Queue(const std::string& input);
   void Stop();
 
  private:

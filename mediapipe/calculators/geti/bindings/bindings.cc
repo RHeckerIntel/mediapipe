@@ -13,6 +13,8 @@
 DLLEXPORT CGraphRunner GraphRunner_Open(const char* graph_content) {
     auto runner= new geti::GraphRunner();
 
+    std::cout << "opening graph: " << std::endl;
+    std::cout << graph_content << std::endl;
     runner->OpenGraph(std::string(graph_content));
 
     return runner;
@@ -49,6 +51,10 @@ DLLEXPORT void GraphRunner_Queue(CGraphRunner instance, const char* image_data, 
     //std::vector<char> image_data((std::istreambuf_iterator<char>(image_file)), std::istreambuf_iterator<char>());
     std::vector<char> image(image_data, image_data + data_length);
     reinterpret_cast<geti::GraphRunner*>(instance)->Queue(image);
+}
+
+DLLEXPORT void GraphRunner_QueueText(CGraphRunner instance, const char* input) {
+    reinterpret_cast<geti::GraphRunner*>(instance)->Queue(input);
 }
 
 DLLEXPORT void GraphRunner_Listen(CGraphRunner instance, CallbackFunction callback) {

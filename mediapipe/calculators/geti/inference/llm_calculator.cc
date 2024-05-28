@@ -1,3 +1,4 @@
+#include "mediapipe/calculators/geti/inference/llm_calculator.pb.h"
 #include "llm_calculator.h"
 #include <thread>
 #include <chrono>
@@ -16,11 +17,20 @@ absl::Status LLMCalculator::GetContract(CalculatorContract *cc) {
 
 absl::Status LLMCalculator::Open(CalculatorContext *cc) {
   LOG(INFO) << "LLMCalculator::Open()";
-  core.add_extension("/opt/intel/openvino_2024.1.0/runtime/lib/intel64/libopenvino_tokenizers.so");
 
-  const char* tokenizer_model_path = "/home/ronald/Projects/llm/tokenizer/openvino_tokenizer.xml";
-  const char* detokenizer_model_path = "/home/ronald/Projects/llm/tokenizer/openvino_detokenizer.xml";
-  const char* model_path = "/home/ronald/Projects/llm/TinyLlama-1.1B-Chat-v1.0/openvino_model.xml";
+  std::cout << "getting ready" << std::endl;
+  core.add_extension("openvino_tokenizers.dll");
+  std::cout << "loaded tokenizers" << std::endl;
+
+  const auto &options =
+      cc->Options<LLMCalculatorOptions>();
+
+  const std::string tokenizer_model_path = options.tokenizer_model_path();
+  const std::string detokenizer_model_path = options.detokenizer_model_path();
+  const std::string model_path = options.model_path();
+  //const char* tokenizer_model_path = "C:\\data\\llm\\openvino_tokenizer.xml";
+  //const char* detokenizer_model_path = "C:\\data\\llm\\openvino_detokenizer.xml";
+  //const char* model_path = "C:\\data\\llm\\openvino_model.xml";
 
   tokenizer_model = core.read_model(tokenizer_model_path);
   detokenizer_model = core.read_model(detokenizer_model_path);
@@ -40,6 +50,7 @@ absl::Status LLMCalculator::Open(CalculatorContext *cc) {
 absl::Status LLMCalculator::GetiProcess(CalculatorContext *cc) {
   LOG(INFO) << "LLMCalculator::GetiProcess()";
   const std::string &prompt = cc->Inputs().Tag("PROMPT").Get<std::string>();
+  std::cout << prompt << std::endl;
   if (prompt.empty()) {
     // Tick from graph to output another token.
     if (out_token == SPECIAL_EOS_TOKEN || seq_len > max_sequence_length) {

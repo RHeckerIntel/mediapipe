@@ -839,14 +839,14 @@ new_local_repository(
 
 new_local_repository(
     name = "linux_openvino",
-    build_file = "//third_party:openvino_linux.BUILD",
+    build_file = "@ovms//third_party/openvino:BUILD",
     path = "/opt/intel/openvino/runtime",
 )
 
 new_local_repository(
     name = "windows_openvino",
     build_file = "//third_party:openvino_windows.BUILD",
-    path = "C:/Users/selse/tmp/vcpkg/packages/openvino_x64-windows",
+    path = "C:/Intel/openvino_2024.1.0/runtime",
 )
 
 new_local_repository(
@@ -876,7 +876,7 @@ new_git_repository(
     name = "model_api",
     remote = "https:///github.com/openvinotoolkit/model_api/",
     build_file = "@_model-api//:BUILD",
-    commit = "9022adeb26ac0e5afe9814afa260fd208d09383a"
+    commit = "0ba6bee38fb77484c559d65d654b05b267f9f35c"
 )
 
 git_repository(
@@ -892,9 +892,16 @@ git_repository(
     build_file = "//third_party:asmjit.BUILD",
 )
 
-git_repository(
+#git_repository(
+#    name = "blend2d",
+#    remote = "https://github.com/blend2d/blend2d",
+#    commit = "235997a8f829f54b56925c7332b8f0bc5b49bcf6",
+#    build_file = "//third_party:blend2d.BUILD",
+#)
+
+
+new_local_repository(
     name = "blend2d",
-    remote = "https://github.com/blend2d/blend2d",
-    commit = "235997a8f829f54b56925c7332b8f0bc5b49bcf6",
     build_file = "//third_party:blend2d.BUILD",
+    path = "C:/Users/selse/tmp/vcpkg/packages/blend2d_x64-windows",
 )

@@ -48,12 +48,32 @@ cc_library(
     visibility = ["//visibility:public"],
 )
 
+config_setting(
+    name = "opt_build",
+    values = {"compilation_mode": "opt"},
+)
+
+config_setting(
+    name = "dbg_build",
+    values = {"compilation_mode": "dbg"},
+)
+
 cc_library(
     name = "openvino",
-    srcs = glob([
-        "lib/openvino.lib",
-        "bin/openvino*.dll"
-    ]),
+    srcs = select({
+        ":opt_build": glob([
+            "lib/intel64/Release/openvino.lib",
+            "bin/intel64/Release/openvino*.dll"
+        ]),
+        ":dbg_build": glob([
+            "lib/intel64/Debug/openvinod.lib",
+            "bin/intel64/Debug/openvino*.dll"
+        ]),
+    }),
+    #srcs = glob([
+    #    "debug/lib/openvinod.lib",
+    #    "debug/bin/openvino*.dll"
+    #]),
     strip_include_prefix = "include/ie",
     visibility = ["//visibility:public"],
     deps = [

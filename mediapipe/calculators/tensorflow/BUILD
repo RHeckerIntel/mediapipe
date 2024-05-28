@@ -168,13 +168,6 @@ mediapipe_cc_proto_library(
 )
 
 mediapipe_cc_proto_library(
-    name = "tensorflow_inference_calculator_cc_proto",
-    srcs = ["tensorflow_inference_calculator.proto"],
-    cc_deps = ["//mediapipe/framework:calculator_cc_proto"],
-    deps = [":tensorflow_inference_calculator_proto"],
-)
-
-mediapipe_cc_proto_library(
     name = "tensorflow_session_from_frozen_graph_generator_cc_proto",
     srcs = ["tensorflow_session_from_frozen_graph_generator.proto"],
     cc_deps = [

@@ -4,8 +4,13 @@ output_stream: "output"
 node {
     calculator : "LLMCalculator"
     input_stream : "PROMPT:input"
-    # input_stream : "HISTORY:previous_conversation"
     output_stream: "TOKEN:output"
-    # output_stream : "HISTORY:previous_conversation"
+    node_options: {
+        [type.googleapis.com/mediapipe.LLMCalculatorOptions] {
+            tokenizer_model_path: "C:\\data\\llm\\openvino_tokenizer.xml"
+            detokenizer_model_path: "C:\\data\\llm\\openvino_detokenizer.xml"
+            model_path: "C:\\data\\llm\\openvino_model.xml"
+        }
+    }
 
 }

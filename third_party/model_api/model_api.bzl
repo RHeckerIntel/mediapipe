@@ -42,7 +42,7 @@ cmake(
     ],
     cache_entries = {{
         "CMAKE_POSITION_INDEPENDENT_CODE": "ON",
-        "OpenVINO_DIR": "C:/Users/selse/tmp/vcpkg/packages/openvino_x64-windows/share/openvino",
+        "OpenVINO_DIR": "C:/Intel/openvino_2024.1.0/runtime/cmake",
         "OpenCV_DIR": "C:/opencv/build",
     }},
     env = {{
@@ -91,10 +91,10 @@ cc_library(
     name = "model_api",
     deps = [
         "@mediapipe//mediapipe/framework/port:opencv_core",
-        #"@windows_openvino//:openvino",
-        #":model_api_cmake_windows",
-        ":model_api_cmake_linux",
-        "@linux_openvino//:openvino",
+        "@windows_openvino//:openvino",
+        ":model_api_cmake_windows",
+        #":model_api_cmake_linux",
+        #"@linux_openvino//:openvino",
     ],
     visibility = ["//visibility:public"],
 )

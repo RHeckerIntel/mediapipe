@@ -1,0 +1,14 @@
+
+syntax = "proto2";
+package mediapipe;
+
+import "mediapipe/framework/calculator.proto";
+
+message LLMCalculatorOptions {
+  extend mediapipe.CalculatorOptions {
+    optional LLMCalculatorOptions ext = 125115994;
+    }
+    required string tokenizer_model_path = 1;
+    required string model_path = 2;
+    required string detokenizer_model_path = 3;
+}
