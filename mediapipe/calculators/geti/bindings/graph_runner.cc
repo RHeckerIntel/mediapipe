@@ -52,6 +52,8 @@ void GraphRunner::Queue(const std::string& input) {
 }
 
 void GraphRunner::Stop() {
+    graph->CloseAllInputStreams();
+    graph->WaitUntilDone();
     graph->Cancel();
     //graph->WaitUntilIdle();
     running = false;
