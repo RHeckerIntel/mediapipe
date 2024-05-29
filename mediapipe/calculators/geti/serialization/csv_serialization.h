@@ -22,18 +22,18 @@ inline std::vector<std::string> to_csv(const RectanglePrediction& prediction) {
     std::vector<std::string> rows = {};
 
     for (auto& label: prediction.labels) {
-        std::vector<std::string> columns = {
-            prediction.labels[0].label.label,
-            prediction.labels[0].label.label_id,
-            std::to_string(prediction.labels[0].probability),
-            "rectangle",
-            std::to_string(prediction.shape.x),
-            std::to_string(prediction.shape.y),
-            std::to_string(prediction.shape.width),
-            std::to_string(prediction.shape.height),
-        };
-
-        rows.push_back(join(columns));
+        std::stringstream ss;
+        ss.imbue(std::locale("C"));
+        ss << label.label.label << ","
+           << label.label.label_id << ","
+           << label.probability << ","
+           << "rectangle" << ","
+           << prediction.shape.x << ","
+           << prediction.shape.y << ","
+           << prediction.shape.width << ","
+           << prediction.shape.height;
+        std::cout << ss.str() << std::endl;
+        rows.push_back(ss.str());
     }
 
     return rows;
@@ -43,19 +43,18 @@ inline std::vector<std::string> to_csv(const RotatedRectanglePrediction& predict
     std::vector<std::string> rows = {};
 
     for (auto& label: prediction.labels) {
-        std::vector<std::string> columns = {
-            prediction.labels[0].label.label,
-            prediction.labels[0].label.label_id,
-            std::to_string(prediction.labels[0].probability),
-            "rotated rectangle",
-            std::to_string(prediction.shape.angle),
-            std::to_string(prediction.shape.center.x),
-            std::to_string(prediction.shape.center.y),
-            std::to_string(prediction.shape.size.width),
-            std::to_string(prediction.shape.size.height),
-        };
-
-        rows.push_back(join(columns));
+        std::stringstream ss;
+        ss.imbue(std::locale("en_US.UTF8"));
+        ss << label.label.label << ","
+           << label.label.label_id << ","
+           << label.probability << ","
+           << "rotated_rectangle" << ","
+           << prediction.shape.angle << ","
+           << prediction.shape.center.x << ","
+           << prediction.shape.center.y << ","
+           << prediction.shape.size.width << ","
+           << prediction.shape.size.height;
+        rows.push_back(ss.str());
     }
 
     return rows;
@@ -65,19 +64,19 @@ inline std::vector<std::string> to_csv(const PolygonPrediction& prediction) {
     std::vector<std::string> rows = {};
 
     for (auto& label: prediction.labels) {
-        std::vector<std::string> columns = {
-            prediction.labels[0].label.label,
-            prediction.labels[0].label.label_id,
-            std::to_string(prediction.labels[0].probability),
-            "polygon",
-        };
+        std::stringstream ss;
+        ss.imbue(std::locale("en_US.UTF8"));
+        ss << label.label.label << ","
+           << label.label.label_id << ","
+           << label.probability << ","
+           << "polygon";
 
         for (auto& point: prediction.shape) {
-            columns.push_back(std::to_string(point.x));
-            columns.push_back(std::to_string(point.y));
+            ss << "," << point.x
+               << "," << point.y;
         }
 
-        rows.push_back(join(columns));
+        rows.push_back(ss.str());
     }
 
     return rows;
@@ -101,7 +100,7 @@ inline std::string csv_serialize(const InferenceResult& inferenceResult) {
         rows.insert(rows.end(), output.begin(), output.end());
     }
 
-    return join(rows, "\n");
+    return join(rows, "\r\n");
 }
 
 }
