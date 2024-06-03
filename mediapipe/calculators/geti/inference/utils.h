@@ -16,8 +16,13 @@ static inline std::vector<Label> get_labels_from_configuration(
   auto labels_iter = configuration.find("labels");
   auto label_ids_iter = configuration.find("label_ids");
   std::vector<Label> labels = {};
-  if (labels_iter != configuration.end() &&
-      label_ids_iter != configuration.end()) {
+  if (label_ids_iter == configuration.end()) {
+    std::vector<std::string> label_names =
+        labels_iter->second.as<std::vector<std::string>>();
+    for (size_t i = 0; i < label_names.size(); i++) {
+      labels.push_back({std::to_string(i), label_names[i]});
+    }
+  } else if (labels_iter != configuration.end()) {
     std::vector<std::string> label_ids =
         label_ids_iter->second.as<std::vector<std::string>>();
     std::vector<std::string> label_names =
