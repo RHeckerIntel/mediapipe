@@ -28,10 +28,10 @@ class GetiCalculatorBase : public CalculatorBase {
     try {
       return GetiProcess(cc);
     } catch (const std::exception& e) {
-      std::cout << "Caught exception with message: " << e.what() << std::endl;
+      LOG(INFO) << "Caught exception with message: " << e.what();
       RET_CHECK(false);
     } catch (...) {
-      std::cout << "Caught unknown exception" << std::endl;
+      LOG(INFO) << "Caught unknown exception";
       RET_CHECK(false);
     }
   }

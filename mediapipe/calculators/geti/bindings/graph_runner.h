@@ -21,13 +21,14 @@ namespace geti {
 class GraphRunner  {
  public:
   GraphRunner(): graph(std::make_shared<mediapipe::CalculatorGraph>()) {}
-  bool OpenGraph(const std::string& graph_content);
+  void OpenGraph(const char* graph_content);
   std::string Get();
   void Listen(const std::function<void(const std::string&)> callback);
   void Queue(const std::vector<char>& image_data);
   void Queue(const std::string& input);
   void Stop();
 
+  static void SetupLogging(const char* filename);
  private:
 
   // Data stored in these variables is unique to each instance of the add-on.

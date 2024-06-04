@@ -20,3 +20,4 @@ extern "C" DLLEXPORT void GraphRunner_Listen(CGraphRunner instance, CallbackFunc
 extern "C" DLLEXPORT void GraphRunner_Queue(CGraphRunner instance, const char* image_data, const size_t data_length);
 extern "C" DLLEXPORT void GraphRunner_QueueText(CGraphRunner instance, const char* input);
 extern "C" DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, const char* output_filename);
+extern "C" DLLEXPORT void GraphRunner_SetLoggingOutput(const char* filename);

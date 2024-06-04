@@ -46,6 +46,10 @@ DLLEXPORT const char* GraphRunner_Get(CGraphRunner instance) {
     return result->c_str();
 }
 
+DLLEXPORT void GraphRunner_SetLoggingOutput(const char* filename) {
+    geti::GraphRunner::SetupLogging(filename);
+}
+
 DLLEXPORT void GraphRunner_Queue(CGraphRunner instance, const char* image_data, const size_t data_length) {
     //std::ifstream image_file(image_path, std::ifstream::binary);
     //std::vector<char> image_data((std::istreambuf_iterator<char>(image_file)), std::istreambuf_iterator<char>());
