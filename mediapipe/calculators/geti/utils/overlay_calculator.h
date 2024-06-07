@@ -51,7 +51,7 @@ namespace mediapipe {
 class OverlayCalculator : public GetiCalculatorBase {
  public:
   static absl::Status GetContract(CalculatorContract *cc);
-  absl::Status Open(CalculatorContext *cc) override;
+  absl::Status GetiOpen(CalculatorContext *cc) override;
   absl::Status GetiProcess(CalculatorContext *cc) override;
   absl::Status Close(CalculatorContext *cc) override;
 

@@ -15,7 +15,7 @@ absl::Status DetectionClassificationResultCalculator::GetContract(
 
   return absl::OkStatus();
 }
-absl::Status DetectionClassificationResultCalculator::Open(
+absl::Status DetectionClassificationResultCalculator::GetiOpen(
     CalculatorContext *cc) {
   return absl::OkStatus();
 }

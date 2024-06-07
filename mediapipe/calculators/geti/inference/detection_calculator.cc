@@ -41,7 +41,7 @@ absl::Status DetectionCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status DetectionCalculator::Open(CalculatorContext *cc) {
+absl::Status DetectionCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "DetectionCalculator::Open()";
   cc->SetOffset(TimestampDiff(0));
 #ifdef USE_MODELADAPTER

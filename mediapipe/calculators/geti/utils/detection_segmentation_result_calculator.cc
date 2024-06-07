@@ -15,7 +15,7 @@ absl::Status DetectionSegmentationResultCalculator::GetContract(
 
   return absl::OkStatus();
 }
-absl::Status DetectionSegmentationResultCalculator::Open(
+absl::Status DetectionSegmentationResultCalculator::GetiOpen(
     CalculatorContext *cc) {
   return absl::OkStatus();
 }

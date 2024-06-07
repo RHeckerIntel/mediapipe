@@ -59,8 +59,10 @@ void GraphRunner::Stop() {
 
 void GraphRunner::SetupLogging(const char* filename) {
     FLAGS_alsologtostderr = true;
-    google::SetLogDestination(google::GLOG_INFO,filename);
-    google::InitGoogleLogging("GraphRunner");
+    google::SetLogDestination(google::GLOG_ERROR,filename);
+    if (!google::IsGoogleLoggingInitialized()) {
+        google::InitGoogleLogging("GraphRunner");
+    }
 }
 
 }

@@ -10,7 +10,7 @@ absl::Status VideoInputCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status VideoInputCalculator::Open(CalculatorContext *cc) {
+absl::Status VideoInputCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "VideoInputCalculator::Open()";
   return absl::OkStatus();
 }

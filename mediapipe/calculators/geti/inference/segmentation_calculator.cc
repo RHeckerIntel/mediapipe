@@ -40,7 +40,7 @@ absl::Status SegmentationCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status SegmentationCalculator::Open(CalculatorContext *cc) {
+absl::Status SegmentationCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "SegmentationCalculator::Open()";
   cc->SetOffset(TimestampDiff(0));
 #ifdef USE_MODELADAPTER

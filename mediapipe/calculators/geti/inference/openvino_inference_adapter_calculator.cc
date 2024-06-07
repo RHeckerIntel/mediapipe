@@ -37,7 +37,7 @@ absl::Status OpenVINOInferenceAdapterCalculator::GetContract(
   return absl::OkStatus();
 }
 
-absl::Status OpenVINOInferenceAdapterCalculator::Open(CalculatorContext *cc) {
+absl::Status OpenVINOInferenceAdapterCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "OpenVINOInferenceAdapterCalculator::Open()";
   cc->SetOffset(TimestampDiff(0));
 

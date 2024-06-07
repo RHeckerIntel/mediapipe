@@ -42,7 +42,7 @@ absl::Status InstanceSegmentationCalculator::GetContract(
   return absl::OkStatus();
 }
 
-absl::Status InstanceSegmentationCalculator::Open(CalculatorContext *cc) {
+absl::Status InstanceSegmentationCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "InstanceSegmentationCalculator::Open()";
   cc->SetOffset(TimestampDiff(0));
 #ifdef USE_MODELADAPTER

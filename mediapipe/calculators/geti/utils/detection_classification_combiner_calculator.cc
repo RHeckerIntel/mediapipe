@@ -31,7 +31,7 @@ absl::Status DetectionClassificationCombinerCalculator::GetContract(
 
   return absl::OkStatus();
 }
-absl::Status DetectionClassificationCombinerCalculator::Open(
+absl::Status DetectionClassificationCombinerCalculator::GetiOpen(
     CalculatorContext *cc) {
   return absl::OkStatus();
 }

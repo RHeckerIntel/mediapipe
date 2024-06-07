@@ -28,7 +28,7 @@ absl::Status CropCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status CropCalculator::Open(CalculatorContext *cc) {
+absl::Status CropCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "CropCalculator::Open()";
   return absl::OkStatus();
 }

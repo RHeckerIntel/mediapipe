@@ -27,7 +27,7 @@ namespace mediapipe {
         return absl::OkStatus();
     }
 
-    absl::Status ModelInferRequestImageCalculator::Open(CalculatorContext *cc) {
+    absl::Status ModelInferRequestImageCalculator::GetiOpen(CalculatorContext *cc) {
         LOG(INFO) << "ModelInferRequestImageCalculator::Open()";
         return absl::OkStatus();
     }

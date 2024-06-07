@@ -40,7 +40,7 @@ absl::Status RotatedDetectionCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status RotatedDetectionCalculator::Open(CalculatorContext *cc) {
+absl::Status RotatedDetectionCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "RotatedDetectionCalculator::Open()";
   cc->SetOffset(TimestampDiff(0));
 

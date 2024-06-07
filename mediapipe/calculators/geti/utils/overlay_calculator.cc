@@ -28,7 +28,7 @@ absl::Status OverlayCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status OverlayCalculator::Open(CalculatorContext *cc) {
+absl::Status OverlayCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "DetectionOverlayCalculator::Open()";
   cc->SetOffset(TimestampDiff(0));
 

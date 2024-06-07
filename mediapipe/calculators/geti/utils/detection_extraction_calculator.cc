@@ -41,7 +41,7 @@ absl::Status DetectionExtractionCalculator::GetContract(
   return absl::OkStatus();
 }
 
-absl::Status DetectionExtractionCalculator::Open(CalculatorContext *cc) {
+absl::Status DetectionExtractionCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "DetectionExtractionCalculator::Open()";
   return absl::OkStatus();
 }

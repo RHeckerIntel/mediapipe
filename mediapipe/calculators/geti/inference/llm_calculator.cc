@@ -15,7 +15,7 @@ absl::Status LLMCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status LLMCalculator::Open(CalculatorContext *cc) {
+absl::Status LLMCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "LLMCalculator::Open()";
 
   std::cout << "getting ready" << std::endl;

@@ -36,7 +36,7 @@ absl::Status ClassificationCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status ClassificationCalculator::Open(CalculatorContext *cc) {
+absl::Status ClassificationCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "ClassificationCalculator::Open()";
   cc->SetOffset(TimestampDiff(0));
 #ifdef USE_MODELADAPTER

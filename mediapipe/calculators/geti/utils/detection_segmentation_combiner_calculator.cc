@@ -13,7 +13,7 @@ absl::Status DetectionSegmentationCombinerCalculator::GetContract(
 
   return absl::OkStatus();
 }
-absl::Status DetectionSegmentationCombinerCalculator::Open(
+absl::Status DetectionSegmentationCombinerCalculator::GetiOpen(
     CalculatorContext *cc) {
   return absl::OkStatus();
 }

@@ -22,7 +22,7 @@ absl::Status AppSerializationCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status AppSerializationCalculator::Open(CalculatorContext *cc) {
+absl::Status AppSerializationCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "AppSerializationCalculator::Open()";
 
   const auto &options =

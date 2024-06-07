@@ -30,7 +30,7 @@ absl::Status EmptyLabelCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status EmptyLabelCalculator::Open(CalculatorContext *cc) {
+absl::Status EmptyLabelCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "EmptyLabelCalculator::Open()";
   return absl::OkStatus();
 }

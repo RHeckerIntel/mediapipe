@@ -38,7 +38,7 @@ absl::Status SerializationCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status SerializationCalculator::Open(CalculatorContext *cc) {
+absl::Status SerializationCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "SerializationCalculator::Open()";
   return absl::OkStatus();
 }

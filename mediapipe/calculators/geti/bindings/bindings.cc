@@ -15,7 +15,7 @@ DLLEXPORT CGraphRunner GraphRunner_Open(const char* graph_content) {
 
     std::cout << "opening graph: " << std::endl;
     std::cout << graph_content << std::endl;
-    runner->OpenGraph(std::string(graph_content));
+    runner->OpenGraph(graph_content);
 
     return runner;
 }
@@ -29,9 +29,10 @@ DLLEXPORT const char* GraphRunner_Run(const char* graph_content, const char* ima
     auto runner = geti::GraphRunner();
     runner.OpenGraph(graph_content);
     runner.Queue(image);
+    std::cout << "before get." << std::endl;
     auto result = new std::string(runner.Get());
-    std::cout << " before return" << result->size() << std::endl;
     return result->c_str();
+    std::cout << " before return" << result->size() << std::endl;
 }
 
 DLLEXPORT void GraphRunner_Close(void* instance) {
