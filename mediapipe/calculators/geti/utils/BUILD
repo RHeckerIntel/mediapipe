@@ -14,6 +14,7 @@ cc_library(
         ":detection_extraction_calculator",
         ":combiner_calculators",
         ":emptylabel_calculators",
+        ":contourer",
     ],
     alwayslink = 1,
 )
@@ -25,6 +26,20 @@ cc_library(
     ],
     deps = [
         "@model_api//:model_api",
+    ]
+)
+
+cc_library(
+    name = "contourer",
+    hdrs = [
+        "contourer.h",
+    ],
+    srcs = [
+        "contourer.cc",
+    ],
+    deps = [
+        "@model_api//:model_api",
+        ":data_structures",
     ]
 )
 
