@@ -24,7 +24,7 @@ absl::Status AnomalyCalculator::GetContract(CalculatorContract *cc) {
   return absl::OkStatus();
 }
 
-absl::Status AnomalyCalculator::Open(CalculatorContext *cc) {
+absl::Status AnomalyCalculator::GetiOpen(CalculatorContext *cc) {
   LOG(INFO) << "AnomalyCalculator::Open()";
   cc->SetOffset(TimestampDiff(0));
 #ifdef USE_MODELADAPTER

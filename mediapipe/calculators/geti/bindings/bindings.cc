@@ -99,3 +99,20 @@ DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, co
     const std::shared_ptr<ov::Model>& ov_model = model->getModel();
     ov::serialize(ov_model, output_filename);
 }
+
+
+DLLEXPORT const char** GetAvailableDevices(int* length) {
+    auto core = ov::Core();
+
+    auto devices = core.get_available_devices();
+    devices.insert(devices.begin(), "AUTO");
+    *length = devices.size();
+    std::cout << devices.size() << std::endl;
+    const char** strings = (const char**)malloc(devices.size() * sizeof(char*));
+    for (int i = 0; i < devices.size(); i++) {
+        // Allocate memory for each string and copy it
+        strings[i] = strdup(devices[i].c_str());
+    }
+
+    return strings;
+}
