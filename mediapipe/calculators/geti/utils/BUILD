@@ -157,7 +157,7 @@ cc_library(
         "overlay.h"
     ],
     deps = [
-        "@blend2d//:blend2d",
+        "//third_party:blend2d",
         ":data_structures",
         "//mediapipe/framework/port:opencv_highgui",
         "//mediapipe/framework/port:opencv_imgproc",

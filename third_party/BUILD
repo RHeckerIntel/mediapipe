@@ -120,6 +120,15 @@ alias(
     visibility = ["//visibility:public"],
 )
 
+alias(
+    name = "blend2d",
+    actual = select({
+        "//mediapipe:windows": "@blend2d_windows//:blend2d",
+        "//conditions:default": "@blend2d_linux//:blend2d",
+    }),
+    visibility = ["//visibility:public"],
+)
+
 bzl_library(
     name = "opencv_ios_xcframework_files_bzl",
     srcs = ["opencv_ios_xcframework_files.bzl"],
