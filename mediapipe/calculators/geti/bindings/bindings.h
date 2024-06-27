@@ -22,3 +22,5 @@ extern "C" DLLEXPORT void GraphRunner_QueueText(CGraphRunner instance, const cha
 extern "C" DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, const char* output_filename);
 extern "C" DLLEXPORT void GraphRunner_SetLoggingOutput(const char* filename);
 extern "C" DLLEXPORT const char** GetAvailableDevices(int* length);
+
+extern "C" DLLEXPORT void RunLLM(const char* model_path, const char* prompt, void (*callback)(const char*));

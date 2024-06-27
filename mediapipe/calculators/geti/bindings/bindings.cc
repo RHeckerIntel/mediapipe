@@ -3,6 +3,7 @@
 #include <fstream>
 #include "graph_runner.h"
 
+#include "openvino/genai/llm_pipeline.hpp"
 #include <models/detection_model.h>
 #include <models/classification_model.h>
 #include <models/segmentation_model.h>
@@ -115,4 +116,20 @@ DLLEXPORT const char** GetAvailableDevices(int* length) {
     }
 
     return strings;
+}
+
+
+DLLEXPORT void RunLLM(const char* model_path, const char* prompt, void (*callback)(const char*)) {
+    ov::genai::LLMPipeline pipe(model_path, "CPU");
+
+    ov::genai::GenerationConfig config;
+    config.max_new_tokens = 100;
+    std::function<bool(std::string)> streamer = [callback](std::string word) {
+        callback(word.c_str());
+        std::cout << word << std::flush;
+        // Return flag correspods whether generation should be stopped.
+        // false means continue generation.
+        return false;
+    };
+    std::cout << pipe.generate(prompt, config, streamer);
 }

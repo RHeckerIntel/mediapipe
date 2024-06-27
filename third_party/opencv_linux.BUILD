@@ -31,7 +31,11 @@ cc_library(
     linkopts = [
         "-L/usr/local/lib",
         "-l:libopencv_core.so",
+        "-l:libopencv_calib3d.so",
+        "-l:libopencv_features2d.so",
         "-l:libopencv_imgcodecs.so",
+        "-l:libopencv_imgproc.so",
+        "-l:libopencv_optflow.so",
     ],
     visibility = ["//visibility:public"],
 )
