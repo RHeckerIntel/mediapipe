@@ -17,7 +17,15 @@ cc_library(
         "//mediapipe/framework/port:parse_text_proto",
         "//mediapipe/framework/port:status",
     ],
+)
 
+cc_library(
+    name = "llm_inference",
+    srcs = ["llm_inference.cc"],
+    hdrs = ["llm_inference.h"],
+    deps = [
+        "@linux_openvino//:openvino",
+    ]
 )
 
 cc_library(
@@ -28,6 +36,7 @@ cc_library(
         "//mediapipe/framework/port:logging",
         "@com_github_glog_glog//:glog",
         ":graph_runner",
+        ":llm_inference",
     ],
     copts = ["-fPIC"],  # Ensure position-independent code
     alwayslink=1,
@@ -49,6 +58,12 @@ windows_dll_library(
 cc_binary(
     name = "scratch",
     srcs = [ "scratch.cc",],
+    deps = [":bindings"]
+)
+
+cc_binary(
+    name = "scratch2",
+    srcs = [ "scratch2.cc",],
     deps = [":bindings"]
 )
 

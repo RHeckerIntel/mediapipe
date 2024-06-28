@@ -3,6 +3,7 @@
 #include <fstream>
 #include "graph_runner.h"
 
+#include "mediapipe/calculators/geti/bindings/llm_inference.h"
 #include "openvino/genai/llm_pipeline.hpp"
 #include <models/detection_model.h>
 #include <models/classification_model.h>
@@ -119,17 +120,31 @@ DLLEXPORT const char** GetAvailableDevices(int* length) {
 }
 
 
-DLLEXPORT void RunLLM(const char* model_path, const char* prompt, void (*callback)(const char*)) {
-    ov::genai::LLMPipeline pipe(model_path, "CPU");
+DLLEXPORT void RunLLM(const char* model_path, const char* device, const char* prompt, bool (*callback)(const char*)) {
+    ov::genai::LLMPipeline pipe(model_path, device);
 
     ov::genai::GenerationConfig config;
-    config.max_new_tokens = 100;
+    config.max_new_tokens = 1000;
+    std::cout << pipe.get_tokenizer().get_eos_token() << std::endl;
     std::function<bool(std::string)> streamer = [callback](std::string word) {
-        callback(word.c_str());
-        std::cout << word << std::flush;
-        // Return flag correspods whether generation should be stopped.
-        // false means continue generation.
-        return false;
+        return callback(word.c_str());
     };
     std::cout << pipe.generate(prompt, config, streamer);
+}
+
+DLLEXPORT CLLMInference LLM_Init(const char* model_path, const char* device) {
+    return new LLMInference(device, model_path);
+}
+
+DLLEXPORT void LLM_SetStreamer(CLLMInference instance, StreamerCallbackFunction callback) {
+    reinterpret_cast<LLMInference*>(instance)->set_streamer(callback);
+}
+
+DLLEXPORT const char* LLM_Prompt(CLLMInference instance, const char* message) {
+    return (new std::string(reinterpret_cast<LLMInference*>(instance)->prompt(message)))->c_str();
+}
+
+DLLEXPORT void LLM_Close(CLLMInference instance) {
+    auto llm_inference = reinterpret_cast<LLMInference*>(instance);
+    delete llm_inference;
 }

@@ -23,4 +23,10 @@ extern "C" DLLEXPORT void SerializeModel(const char* model_path, const char* mod
 extern "C" DLLEXPORT void GraphRunner_SetLoggingOutput(const char* filename);
 extern "C" DLLEXPORT const char** GetAvailableDevices(int* length);
 
-extern "C" DLLEXPORT void RunLLM(const char* model_path, const char* prompt, void (*callback)(const char*));
+
+typedef void* CLLMInference;
+typedef bool (*StreamerCallbackFunction)(const char*);
+extern "C" DLLEXPORT CLLMInference LLM_Init(const char* model_path, const char* device);
+extern "C" DLLEXPORT void LLM_SetStreamer(CLLMInference instance, StreamerCallbackFunction callback);
+extern "C" DLLEXPORT const char* LLM_Prompt(CLLMInference instance, const char* message);
+extern "C" DLLEXPORT void LLM_Close(CLLMInference instance);
