@@ -62,12 +62,12 @@ cc_library(
     name = "openvino",
     srcs = select({
         ":opt_build": glob([
-            "lib/intel64/Release/openvino.lib",
-            "bin/intel64/Release/openvino*.dll"
+            "lib/intel64/Release/*.lib",
+            "bin/intel64/Release/*.dll"
         ]),
         ":dbg_build": glob([
-            "lib/intel64/Debug/openvinod.lib",
-            "bin/intel64/Debug/openvino*.dll"
+            "lib/intel64/Release/*.lib",
+            "bin/intel64/Release/*.dll"
         ]),
     }),
     #srcs = glob([

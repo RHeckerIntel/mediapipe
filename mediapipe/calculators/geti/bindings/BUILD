@@ -24,7 +24,7 @@ cc_library(
     srcs = ["llm_inference.cc"],
     hdrs = ["llm_inference.h"],
     deps = [
-        "@linux_openvino//:openvino",
+        "@windows_openvino//:openvino",
     ]
 )
 
@@ -50,7 +50,8 @@ windows_dll_library(
     deps = [
         "@windows_pugixml//:pugixml",
         "@windows_tbb//:tbb",
-        ":graph_runner"
+        ":graph_runner",
+        ":llm_inference",
     ],
     copts = ["/DCOMPILING_DLL"],
 )
@@ -58,7 +59,7 @@ windows_dll_library(
 cc_binary(
     name = "scratch",
     srcs = [ "scratch.cc",],
-    deps = [":bindings"]
+    deps = [":windows_bindings"]
 )
 
 cc_binary(
