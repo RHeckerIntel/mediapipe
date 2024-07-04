@@ -78,22 +78,26 @@ DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, co
     std::cout << "input " << model_path << std::endl;
     std::cout << "output " << output_filename << std::endl;
 
+
+    const std::string device = "CPU";
+
+
     if (model_type_str == "detection") {
-        model = DetectionModel::create_model(model_path);
+        model = DetectionModel::create_model(model_path, {}, "", true, device);
     } else if (model_type_str == "classification") {
-        model = ClassificationModel::create_model(model_path);
+        model = ClassificationModel::create_model(model_path, {}, true, device);
     } else if (model_type_str == "segmentation") {
-        model = SegmentationModel::create_model(model_path);
+        model = SegmentationModel::create_model(model_path, {}, true, device);
     } else if (model_type_str == "rotated_detection") {
-        model = MaskRCNNModel::create_model(model_path);
+        model = MaskRCNNModel::create_model(model_path, {}, true, device);
     } else if (model_type_str == "instance_segmentation") {
-        model = MaskRCNNModel::create_model(model_path);
+        model = MaskRCNNModel::create_model(model_path, {}, true, device);
     } else if (model_type_str == "anomaly_detection") {
-        model = AnomalyModel::create_model(model_path);
+        model = AnomalyModel::create_model(model_path, {}, true, device);
     } else if (model_type_str == "anomaly_classification") {
-        model = AnomalyModel::create_model(model_path);
+        model = AnomalyModel::create_model(model_path, {}, true, device);
     } else if (model_type_str == "anomaly_segmentation") {
-        model = AnomalyModel::create_model(model_path);
+        model = AnomalyModel::create_model(model_path, {}, true, device);
     } else {
         throw std::runtime_error("Model type not available");
     }
