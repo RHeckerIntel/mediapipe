@@ -259,3 +259,13 @@ cc_test(
     ],
 )
 
+cc_library(
+    name = "camera_info",
+    srcs = [
+        "camera_info.cc",
+    ],
+    hdrs = [
+        "camera_info.h",
+    ],
+    deps = []
+)

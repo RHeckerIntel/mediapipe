@@ -1,21 +1,41 @@
-#include "bindings.h"
-#include <fstream>
 #include <iostream>
-#include <sstream>
-#include <vector>
-
-#include <thread>
-
-#include "mediapipe/calculators/geti/bindings/graph_runner.h"
-#include "mediapipe/framework/port/opencv_highgui_inc.h"
-#include "mediapipe/framework/port/parse_text_proto.h"
-
-/*
 #include "mediapipe/framework/port/opencv_highgui_inc.h"
 #include "mediapipe/framework/port/opencv_imgproc_inc.h"
 #include "mediapipe/framework/port/opencv_videoio_inc.h"
 
+#include <fcntl.h>              // For O_RDWR
+#include <sys/ioctl.h>          // For ioctl
+#include <linux/videodev2.h>
+#include <unistd.h>             // For close
+#include <set>                  // For std::set to track unique devices
 
+void list_cameras() {
+    std::set<std::string> listed_devices;
+    for (int i = 0; i < 64; ++i) { // Check up to /dev/video63
+        std::string device = "/dev/video" + std::to_string(i);
+        int fd = open(device.c_str(), O_RDWR | O_NONBLOCK);
+        if (fd == -1) {
+            continue; // Device not found or can't be opened
+        }
+
+        v4l2_capability cap;
+        if (ioctl(fd, VIDIOC_QUERYCAP, &cap) == -1) {
+            close(fd);
+            continue; // Failed to query capabilities
+        }
+
+        if (cap.capabilities & V4L2_CAP_VIDEO_CAPTURE) {
+            // Use bus_info to uniquely identify the device
+            std::string device_id(reinterpret_cast<char*>(cap.bus_info));
+            if (listed_devices.find(device_id) == listed_devices.end()) {
+                std::cout << "Found camera: " << device << " - " << cap.card << std::endl;
+                listed_devices.insert(device_id);
+            }
+        }
+
+        close(fd);
+    }
+}
 void video_stuff() {
   cv::VideoCapture cap;
   cv::Mat frame;
@@ -31,82 +51,8 @@ void video_stuff() {
   cv::imwrite("/data/output.png", frame);
   cap.release();
 }
-*/
 
-static const char *graph_content = R"pb(
-output_stream : "output"
-
-node {
-    calculator : "OpenVINOInferenceAdapterCalculator"
-    output_side_packet : "INFERENCE_ADAPTER:adapter"
-    node_options: {
-        [type.googleapis.com/mediapipe.OpenVINOInferenceAdapterCalculatorOptions] {
-            model_path: "/data/omz_models/intel/face-detection-retail-0004/face-detection-retail-0004.xml"
-        }
-    }
-}
-
-node {
-    calculator : "VideoInputCalculator"
-    output_stream: "IMAGE:input_image"
-}
-
-node {
-    calculator : "DetectionCalculator"
-    input_side_packet : "INFERENCE_ADAPTER:adapter"
-    input_stream : "IMAGE:input_image"
-    output_stream: "INFERENCE_RESULT:inference_detections"
-}
-
-node {
-    calculator : "OverlayCalculator"
-    input_stream : "IMAGE:input_image"
-    input_stream : "INFERENCE_RESULT:inference_detections"
-    output_stream: "IMAGE:output"
-    node_options: {
-        [type.googleapis.com/mediapipe.OverlayCalculatorOptions] {
-            labels: {
-                id: "face"
-                name: "face"
-                color: "#f7dab3ff"
-                is_empty: false
-            }
-
-            stroke_width: 2
-            opacity: 0.4
-            font_size: 1.0
-        }
-    }
-}
-)pb";
 
 int main() {
-  std::cout << "scratch" << std::endl;
-
-  std::shared_ptr<mediapipe::OutputStreamPoller> poller;
-  std::shared_ptr<mediapipe::CalculatorGraph> graph;
-
-  mediapipe::CalculatorGraphConfig graph_config =
-      mediapipe::ParseTextProtoOrDie<mediapipe::CalculatorGraphConfig>(
-          absl::Substitute(graph_content));
-  graph = std::make_shared<mediapipe::CalculatorGraph>(graph_config);
-
-  poller = std::unique_ptr<mediapipe::OutputStreamPoller>(
-      new mediapipe::OutputStreamPoller(
-          graph->AddOutputStreamPoller("output").value()));
-  // graph->Initialize(graph_config);
-  graph->StartRun({});
-
-  mediapipe::Packet output_packet;
-  for (int i = 0; i < 20; i++) {
-    std::string path = "/data/video/output_" + std::to_string(i) + ".png";
-    if (poller->Next(&output_packet)) {
-        std::cout << path << std::endl;
-        cv::Mat output_image = output_packet.Get<cv::Mat>();
-        cv::cvtColor(output_image, output_image, cv::COLOR_BGR2RGB);
-        cv::imwrite(path, output_image);
-    }
-  }
-
-  return 0;
+  list_cameras();
 }

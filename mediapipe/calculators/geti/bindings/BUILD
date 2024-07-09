@@ -58,7 +58,11 @@ windows_dll_library(
 cc_binary(
     name = "scratch",
     srcs = [ "scratch.cc",],
-    deps = [":bindings"]
+    deps = [
+        "@mediapipe//mediapipe/framework/port:opencv_video",
+        "@mediapipe//mediapipe/framework/port:opencv_videoio",
+        ":bindings",
+    ]
 )
 
 cc_binary(
