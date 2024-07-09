@@ -8,7 +8,7 @@ cc_library(
     srcs = ["graph_runner.cc"],
     hdrs = ["graph_runner.h"],
     deps = [
-        "@model_api//:model_api",
+        "//third_party/model_api:model_api",
         "//mediapipe/calculators/geti/inference:inference_calculators",
         "//mediapipe/calculators/geti/utils:utils",
         "//mediapipe/calculators/geti/serialization:calculators",

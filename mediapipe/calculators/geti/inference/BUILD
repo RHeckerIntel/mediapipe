@@ -90,7 +90,7 @@ cc_library(
         "//mediapipe/calculators/geti/utils:contourer",
         "//mediapipe/calculators/geti/utils:emptylabel_cc_proto",
         ":inference_utils",
-        "@model_api//:model_api",
+        "//third_party/model_api:model_api",
         ":geti_calculator_base",
     ],
     defines = [
@@ -106,7 +106,7 @@ cc_library(
     deps = [
         "//mediapipe/framework:calculator_framework",
         "//mediapipe/calculators/geti/utils:data_structures",
-        "@model_api//:model_api",
+        "//third_party/model_api:model_api",
     ]
 )
 

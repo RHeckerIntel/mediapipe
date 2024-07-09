@@ -25,7 +25,7 @@ cc_library(
         "data_structures.h",
     ],
     deps = [
-        "@model_api//:model_api",
+        "//third_party/model_api:model_api",
     ]
 )
 
@@ -38,7 +38,7 @@ cc_library(
         "contourer.cc",
     ],
     deps = [
-        "@model_api//:model_api",
+        "//third_party/model_api:model_api",
         ":data_structures",
     ]
 )
@@ -74,7 +74,7 @@ cc_library(
         "//mediapipe/calculators/core:end_loop_calculator",
         ":data_structures",
         "//mediapipe/calculators/geti/inference:geti_calculator_base",
-        "@model_api//:model_api",
+        "//third_party/model_api:model_api",
     ],
     alwayslink = 1,
 )
@@ -199,7 +199,7 @@ cc_library(
         "//mediapipe/framework/formats:image_frame",
         "//mediapipe/framework/formats:image_frame_opencv",
         "//mediapipe/framework/port:opencv_core",
-        "@model_api//:model_api",
+        "//third_party/model_api:model_api",
         "//mediapipe/calculators/geti/inference:geti_calculator_base",
         "//mediapipe/calculators/geti/serialization:serialization",
         ":overlay_calculator_cc_proto",
@@ -239,7 +239,7 @@ cc_library(
         "//mediapipe/framework/formats:image_frame",
         "//mediapipe/framework/formats:image_frame_opencv",
         "//mediapipe/framework/port:opencv_core",
-        "@model_api//:model_api",
+        "//third_party/model_api:model_api",
         "//mediapipe/calculators/geti/inference:geti_calculator_base",
     ],
     alwayslink = 1,

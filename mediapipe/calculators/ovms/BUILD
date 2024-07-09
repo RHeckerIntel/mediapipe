@@ -50,7 +50,7 @@ cc_library(
         "openvinoinferencedumputils",
         "//mediapipe/framework/port:logging",
         "@ovms//src:ovms_header",
-        "@model_api//:model_api",
+        "//third_party/model_api:model_api",
         "@linux_openvino//:openvino",
     ],
     copts = ["-Iexternal/ovms/src","-Isrc"],

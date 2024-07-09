@@ -88,18 +88,14 @@ cc_library(
 )
 
 cc_library(
-    name = "model_api",
+    name = "model_api_windows",
     deps = [
         "@mediapipe//mediapipe/framework/port:opencv_core",
         "@windows_openvino//:openvino",
         ":model_api_cmake_windows",
-        #":model_api_cmake_linux",
-        #"@linux_openvino//:openvino",
     ],
     visibility = ["//visibility:public"],
 )
-
-
 
 """
     repository_ctx.file("BUILD", build_file_content.format(http_proxy=http_proxy, https_proxy=https_proxy))
