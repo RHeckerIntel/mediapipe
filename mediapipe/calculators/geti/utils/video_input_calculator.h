@@ -2,7 +2,9 @@
 #define VIDEO_INPUT_CALCULATOR_H_
 
 #include "mediapipe/calculators/geti/inference/geti_calculator_base.h"
+#include "mediapipe/framework/port/opencv_videoio_inc.h"
 #include "mediapipe/framework/calculator_framework.h"
+#include "mediapipe/calculators/geti/utils/video_input_options.pb.h"
 
 namespace mediapipe {
 
@@ -22,6 +24,11 @@ class VideoInputCalculator : public GetiCalculatorBase {
   absl::Status Close(CalculatorContext *cc) override;
 private:
   Timestamp loop_internal_timestamp_ = Timestamp(0);
+
+  std::string device;
+  cv::VideoCapture cap;
+  cv::Mat frame;
+
 };
 
 }  // namespace mediapipe

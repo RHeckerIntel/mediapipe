@@ -14,6 +14,7 @@ cc_library(
         ":detection_extraction_calculator",
         ":combiner_calculators",
         ":emptylabel_calculators",
+        ":video_input_calculator",
         ":contourer",
     ],
     alwayslink = 1,
@@ -104,6 +105,23 @@ cc_library(
     alwayslink = 1
 )
 
+proto_library(
+    name = "video_input_options_proto",
+    srcs = ["video_input_options.proto"],
+    visibility = ["//visibility:public"],
+    deps = [
+        "//mediapipe/framework:calculator_proto",
+    ],
+)
+
+mediapipe_cc_proto_library(
+    name = "video_input_options_cc_proto",
+    srcs = ["video_input_options.proto"],
+    cc_deps = ["//mediapipe/framework:calculator_cc_proto"],
+    visibility = ["//visibility:public"],
+    deps = [":video_input_options_proto"],
+)
+
 cc_library(
     name = "video_input_calculator",
     srcs = [
@@ -113,6 +131,8 @@ cc_library(
         "video_input_calculator.h",
     ],
     deps = [
+        ":video_input_options_cc_proto",
+        "//mediapipe/framework/stream_handler:immediate_input_stream_handler",
         "//mediapipe/framework:calculator_framework",
         "//mediapipe/framework/port:opencv_videoio",
         "//mediapipe/calculators/geti/inference:geti_calculator_base",

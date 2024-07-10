@@ -62,6 +62,9 @@ cc_binary(
         "@mediapipe//mediapipe/framework/port:opencv_video",
         "@mediapipe//mediapipe/framework/port:opencv_videoio",
         ":bindings",
+    ],
+    data = [
+        "//mediapipe/calculators/geti/graphs:graphs",
     ]
 )
 

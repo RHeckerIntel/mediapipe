@@ -1,0 +1,106 @@
+input_stream: "input"
+output_stream : "output"
+
+node {
+    calculator: "VideoInputCalculator"
+    output_stream: "IMAGE:image"
+    input_stream : "INIT:input"
+    input_stream : "FINISHED:output"
+    input_stream_info: {
+        tag_index: "FINISHED"
+        back_edge: true
+    }
+
+    input_stream_handler {
+        input_stream_handler: "ImmediateInputStreamHandler"
+    }
+    node_options: {
+        [type.googleapis.com/mediapipe.VideoInputOptions] {
+        device: "/dev/video0"
+        }
+    }
+}
+
+
+node {
+    calculator : "OpenVINOInferenceAdapterCalculator"
+    output_side_packet : "INFERENCE_ADAPTER:adapter_0"
+    node_options: {
+        [type.googleapis.com/mediapipe.OpenVINOInferenceAdapterCalculatorOptions] {
+            model_path: "/home/ronald/.local/share/intel.openvino.console/c82a1a05-088f-4122-902c-e63608dc1dc5/662aac23edcb02d8b632309a.xml"
+            device: "CPU"
+        }
+    }
+}
+
+
+node {
+    calculator : "DetectionCalculator"
+    input_side_packet : "INFERENCE_ADAPTER:adapter_0"
+    input_stream : "IMAGE:image"
+    output_stream: "INFERENCE_RESULT:inference_calculator_result"
+}
+
+node {
+    calculator: "EmptyLabelCalculator"
+    input_stream: "PREDICTION:inference_calculator_result"
+    output_stream: "PREDICTION:inference_result"
+    node_options: {
+        [type.googleapis.com/mediapipe.EmptyLabelOptions] {
+        id: "662aac23edcb02d8b63230a1"
+        label: "No object"
+        }
+    }
+}
+
+
+node {
+    calculator : "OverlayCalculator"
+    input_stream : "IMAGE:image"
+    input_stream : "INFERENCE_RESULT:inference_result"
+    output_stream : "IMAGE:overlay"
+    node_options: {
+        [type.googleapis.com/mediapipe.OverlayCalculatorOptions] {
+                        labels: {
+            id: "662aac23edcb02d8b632309c"
+            name: "Cow"
+            color: "#ff7d00ff"
+            is_empty: false
+        }
+        labels: {
+            id: "662aac23edcb02d8b632309d"
+            name: "Sheep"
+            color: "#076984ff"
+            is_empty: false
+        }
+        labels: {
+            id: "662aac23edcb02d8b63230a1"
+            name: "No object"
+            color: "#000000ff"
+            is_empty: true
+        }
+
+
+        stroke_width: 2
+        opacity: 0.4
+        font_size: 1.0
+
+        font_path: "/home/ronald/.local/share/intel.openvino.console/font.ttf"
+        }
+    }
+}
+
+
+node {
+    calculator : "AppSerializationCalculator"
+    input_stream : "INFERENCE_RESULT:inference_result"
+    input_stream : "OVERLAY:overlay"
+    output_stream: "RESULT:output"
+    node_options: {
+        [type.googleapis.com/mediapipe.AppSerializationCalculatorOptions] {
+            overlay: true
+            csv: false
+            json: false
+        }
+    }
+}
