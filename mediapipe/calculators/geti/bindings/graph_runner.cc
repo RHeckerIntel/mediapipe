@@ -3,6 +3,8 @@
 
 #include "mediapipe/framework/port/parse_text_proto.h"
 #include "mediapipe/framework/port/canonical_errors.h"
+#include <chrono>
+#include <thread>
 
 namespace geti{
 
@@ -19,7 +21,7 @@ void GraphRunner::OpenGraph(const char* graph_content) {
 std::string GraphRunner::Get() {
     mediapipe::Packet output_packet;
     std::cout << "getting..." << std::endl;
-    std::cout << graph->HasError() << std::endl;
+    std::cout << "Has error: " << graph->HasError() << std::endl;
     if (running && poller->Next(&output_packet)) {
         return output_packet.Get<std::string>();
     }
@@ -50,11 +52,11 @@ void GraphRunner::Queue(const std::string& input) {
 }
 
 void GraphRunner::Stop() {
+    running = false;
     graph->CloseAllInputStreams();
     graph->WaitUntilDone();
     graph->Cancel();
     //graph->WaitUntilIdle();
-    running = false;
 }
 
 void GraphRunner::SetupLogging(const char* filename) {
@@ -63,6 +65,41 @@ void GraphRunner::SetupLogging(const char* filename) {
     if (!google::IsGoogleLoggingInitialized()) {
         google::InitGoogleLogging("GraphRunner");
     }
+}
+
+bool GraphRunner::OpenCamera(const std::string &device, const std::function<void(const std::string&)> callback) {
+    std::cout << "Loading camera: " << device << std::endl;
+    cv::VideoCapture cap;
+    std::cout << device << std::endl;
+    cap.open(device);
+    if (!cap.isOpened()) {
+        LOG(ERROR) << "ERROR! Unable to open camera\n";
+        return false;
+    }
+    using namespace std::chrono_literals;
+
+    cv::Mat frame;
+    mediapipe::Packet output_packet;
+    while(running) {
+        std::cout << "input..." << std::endl;
+        cap.read(frame);
+        std::cout << frame.rows << std::endl;
+        if (frame.empty()) {
+            std::cout << "empty frame" << std::endl;
+            std::this_thread::sleep_for(500ms);
+            graph->WaitUntilIdle();
+            continue;
+        }
+        auto packet = mediapipe::MakePacket<cv::Mat>(frame).At(mediapipe::Timestamp(++timestamp));
+        graph->AddPacketToInputStream("input", packet);
+        graph->WaitUntilIdle();
+        poller->Next(&output_packet);
+        callback(output_packet.Get<std::string>());
+    }
+
+    return true;
+
+
 }
 
 }

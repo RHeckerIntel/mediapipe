@@ -16,6 +16,8 @@ cc_library(
         "//mediapipe/framework:calculator_framework",
         "//mediapipe/framework/port:parse_text_proto",
         "//mediapipe/framework/port:status",
+        "//mediapipe/framework/port:opencv_video",
+        "//mediapipe/framework/port:opencv_videoio",
     ],
 )
 
@@ -59,8 +61,6 @@ cc_binary(
     name = "scratch",
     srcs = [ "scratch.cc",],
     deps = [
-        "@mediapipe//mediapipe/framework/port:opencv_video",
-        "@mediapipe//mediapipe/framework/port:opencv_videoio",
         ":bindings",
     ],
     data = [

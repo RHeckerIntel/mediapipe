@@ -71,6 +71,19 @@ DLLEXPORT void GraphRunner_Listen(CGraphRunner instance, CallbackFunction callba
     reinterpret_cast<geti::GraphRunner*>(instance)->Listen(lambda_callback);
 }
 
+DLLEXPORT CGraphRunner GraphRunner_OpenCamera(const char* graph, const char* device, CallbackFunction callback) {
+    auto runner= new geti::GraphRunner();
+    runner->OpenGraph(graph);
+
+    auto lambda_callback = [callback](const std::string& message) {
+        callback(message.c_str());
+    };
+
+    runner->OpenCamera(device, lambda_callback);
+
+    return runner;
+}
+
 DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, const char* output_filename) {
     std::string model_type_str(model_type);
     std::unique_ptr<ModelBase> model;

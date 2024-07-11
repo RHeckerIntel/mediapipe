@@ -24,15 +24,22 @@ int main() {
   buffer << t.rdbuf();
   std::string graph = buffer.str();
 
+  std::cout << sizeof(size_t) << std::endl;
+  std::cout << sizeof(long) << std::endl;
 
-  auto graph_runner = GraphRunner_Open(graph.c_str());
-  const char* data = "hello";
-  GraphRunner_Queue(graph_runner, data, 5);
+  const char* model_path = "/home/ronald/.local/share/intel.openvino.console/3c19fd52-bcab-44fa-8537-0426073a29c2/662aac23edcb02d8b632309a_model.xml";
+  const char* model_typ = "detection";
+  const char* output = "/home/ronald/.local/share/intel.openvino.console/3c19fd52-bcab-44fa-8537-0426073a29c2/662aac23edcb02d8b632309a.xml";
+  SerializeModel(model_path, model_typ, output);
 
-  while(true) {
-    GraphRunner_Get(graph_runner);
-    std::this_thread::sleep_for(2000ms);
-  }
+
+  //auto graph_runner = GraphRunner_Open(graph.c_str());
+  //GraphRunner_Listen(graph_runner, callback);
+  //GraphRunner_OpenCamera(graph.c_str(), "/dev/video0", callback);
+
+  //std::cout << GraphRunner_Get(graph_runner) << std::endl;
+  //std::cout << GraphRunner_Get(graph_runner) << std::endl;
+  //std::cout << GraphRunner_Get(graph_runner) << std::endl;
 
   return 0;
 }

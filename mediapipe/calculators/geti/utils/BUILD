@@ -14,7 +14,6 @@ cc_library(
         ":detection_extraction_calculator",
         ":combiner_calculators",
         ":emptylabel_calculators",
-        ":video_input_calculator",
         ":contourer",
     ],
     alwayslink = 1,
