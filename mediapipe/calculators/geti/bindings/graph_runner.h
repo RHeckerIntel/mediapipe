@@ -5,6 +5,7 @@
 #include <models/input_data.h>
 #include <models/results.h>
 #include <functional>
+#include <thread>
 
 #include <vector>
 #include <memory>
@@ -28,9 +29,10 @@ class GraphRunner  {
   void Queue(const std::string& input);
   void Stop();
 
-  bool OpenCamera(const std::string& device, const std::function<void(const std::string&)> callback);
+  bool OpenCamera(const std::string& device);
 
   static void SetupLogging(const char* filename);
+  std::thread camera_thread;
  private:
 
   // Data stored in these variables is unique to each instance of the add-on.

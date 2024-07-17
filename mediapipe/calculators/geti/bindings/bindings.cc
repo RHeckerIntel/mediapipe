@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include "graph_runner.h"
+#include <chrono>
+#include <thread>
 
 #include "mediapipe/calculators/geti/bindings/llm_inference.h"
 #include "openvino/genai/llm_pipeline.hpp"
@@ -71,17 +73,9 @@ DLLEXPORT void GraphRunner_Listen(CGraphRunner instance, CallbackFunction callba
     reinterpret_cast<geti::GraphRunner*>(instance)->Listen(lambda_callback);
 }
 
-DLLEXPORT CGraphRunner GraphRunner_OpenCamera(const char* graph, const char* device, CallbackFunction callback) {
-    auto runner= new geti::GraphRunner();
-    runner->OpenGraph(graph);
-
-    auto lambda_callback = [callback](const std::string& message) {
-        callback(message.c_str());
-    };
-
-    runner->OpenCamera(device, lambda_callback);
-
-    return runner;
+DLLEXPORT void GraphRunner_OpenCamera(CGraphRunner instance, const char* device) {
+    auto runner = reinterpret_cast<geti::GraphRunner*>(instance);
+    runner->camera_thread = std::thread(&geti::GraphRunner::OpenCamera, runner, device);
 }
 
 DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, const char* output_filename) {

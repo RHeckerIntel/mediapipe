@@ -1,4 +1,4 @@
-input_stream: "input"
+ input_stream: "input"
       output_stream : "output"
 
 
@@ -7,7 +7,7 @@ input_stream: "input"
         output_side_packet : "INFERENCE_ADAPTER:adapter_0"
         node_options: {
           [type.googleapis.com/mediapipe.OpenVINOInferenceAdapterCalculatorOptions] {
-              model_path: "/home/ronald/.local/share/intel.openvino.console/c82a1a05-088f-4122-902c-e63608dc1dc5/662aac23edcb02d8b632309a.xml"
+              model_path: "/home/ronald/.local/share/intel.openvino.console/3c19fd52-bcab-44fa-8537-0426073a29c2/662aac23edcb02d8b632309a.xml"
               device: "CPU"
           }
         }

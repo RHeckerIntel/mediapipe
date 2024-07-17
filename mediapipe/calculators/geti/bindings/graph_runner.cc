@@ -53,6 +53,9 @@ void GraphRunner::Queue(const std::string& input) {
 
 void GraphRunner::Stop() {
     running = false;
+    if (camera_thread.joinable()) {
+        camera_thread.join();
+    }
     graph->CloseAllInputStreams();
     graph->WaitUntilDone();
     graph->Cancel();
@@ -67,7 +70,7 @@ void GraphRunner::SetupLogging(const char* filename) {
     }
 }
 
-bool GraphRunner::OpenCamera(const std::string &device, const std::function<void(const std::string&)> callback) {
+bool GraphRunner::OpenCamera(const std::string &device) {
     std::cout << "Loading camera: " << device << std::endl;
     cv::VideoCapture cap;
     std::cout << device << std::endl;
@@ -76,7 +79,6 @@ bool GraphRunner::OpenCamera(const std::string &device, const std::function<void
         LOG(ERROR) << "ERROR! Unable to open camera\n";
         return false;
     }
-    using namespace std::chrono_literals;
 
     cv::Mat frame;
     mediapipe::Packet output_packet;
@@ -86,15 +88,12 @@ bool GraphRunner::OpenCamera(const std::string &device, const std::function<void
         std::cout << frame.rows << std::endl;
         if (frame.empty()) {
             std::cout << "empty frame" << std::endl;
-            std::this_thread::sleep_for(500ms);
             graph->WaitUntilIdle();
             continue;
         }
         auto packet = mediapipe::MakePacket<cv::Mat>(frame).At(mediapipe::Timestamp(++timestamp));
         graph->AddPacketToInputStream("input", packet);
         graph->WaitUntilIdle();
-        poller->Next(&output_packet);
-        callback(output_packet.Get<std::string>());
     }
 
     return true;
