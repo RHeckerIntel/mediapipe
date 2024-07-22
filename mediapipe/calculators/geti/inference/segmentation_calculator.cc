@@ -1,6 +1,7 @@
 #include "segmentation_calculator.h"
 
 #include <memory>
+#include <opencv4/opencv2/imgproc.hpp>
 #include <string>
 
 #include "../inference/utils.h"
@@ -79,10 +80,16 @@ absl::Status SegmentationCalculator::GetiProcess(CalculatorContext *cc) {
     if (contour.shape.size() > 0) {
       cv::approxPolyDP(contour.shape, approxCurve, 1.0f, true);
       if (approxCurve.size() > 2) {
+        float area = cv::contourArea(approxCurve);
+        auto rect = cv::boundingRect(approxCurve);
         result->polygons.push_back(
-            {{geti::LabelResult{contour.probability,
-                                labels_map[contour.label]}},
-             approxCurve});
+          {
+            {geti::LabelResult{contour.probability, labels_map[contour.label]}},
+             approxCurve,
+             area,
+             rect.size()
+          }
+        );
       }
     }
   }
