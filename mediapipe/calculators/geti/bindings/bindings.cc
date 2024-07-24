@@ -151,3 +151,11 @@ DLLEXPORT void LLM_Close(CLLMInference instance) {
     auto llm_inference = reinterpret_cast<LLMInference*>(instance);
     delete llm_inference;
 }
+
+DLLEXPORT void LLM_ClearHistory(CLLMInference instance) {
+    reinterpret_cast<LLMInference*>(instance)->clear_history();
+}
+
+DLLEXPORT void LLM_ForceStop(CLLMInference instance) {
+    reinterpret_cast<LLMInference*>(instance)->force_stop();
+}

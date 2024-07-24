@@ -30,3 +30,5 @@ extern "C" DLLEXPORT CLLMInference LLM_Init(const char* model_path, const char* 
 extern "C" DLLEXPORT void LLM_SetStreamer(CLLMInference instance, StreamerCallbackFunction callback);
 extern "C" DLLEXPORT const char* LLM_Prompt(CLLMInference instance, const char* message);
 extern "C" DLLEXPORT void LLM_Close(CLLMInference instance);
+extern "C" DLLEXPORT void LLM_ClearHistory(CLLMInference instance);
+extern "C" DLLEXPORT void LLM_ForceStop(CLLMInference instance);

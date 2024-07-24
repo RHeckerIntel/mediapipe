@@ -69,6 +69,9 @@ inline std::vector<std::string> to_csv(const PolygonPrediction& prediction) {
         ss << label.label.label << ","
            << label.label.label_id << ","
            << label.probability << ","
+           << prediction.area << ","
+           << prediction.size.width << ","
+           << prediction.size.height << ","
            << "polygon";
 
         for (auto& point: prediction.shape) {
