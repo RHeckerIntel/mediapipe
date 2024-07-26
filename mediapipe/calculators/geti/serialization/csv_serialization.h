@@ -2,6 +2,7 @@
 #define CSV_SERIALIZATION_H_
 
 #include "../utils/data_structures.h"
+#include <clocale>
 #include <string>
 #include <vector>
 
@@ -23,7 +24,6 @@ inline std::vector<std::string> to_csv(const RectanglePrediction& prediction) {
 
     for (auto& label: prediction.labels) {
         std::stringstream ss;
-        ss.imbue(std::locale("C"));
         ss << label.label.label << ","
            << label.label.label_id << ","
            << label.probability << ","
@@ -31,7 +31,9 @@ inline std::vector<std::string> to_csv(const RectanglePrediction& prediction) {
            << prediction.shape.x << ","
            << prediction.shape.y << ","
            << prediction.shape.width << ","
-           << prediction.shape.height;
+           << prediction.shape.height << ","
+           << prediction.shape.area() << ","
+           << "0"; //angle = 0
         std::cout << ss.str() << std::endl;
         rows.push_back(ss.str());
     }
@@ -44,16 +46,16 @@ inline std::vector<std::string> to_csv(const RotatedRectanglePrediction& predict
 
     for (auto& label: prediction.labels) {
         std::stringstream ss;
-        ss.imbue(std::locale("en_US.UTF8"));
         ss << label.label.label << ","
            << label.label.label_id << ","
            << label.probability << ","
            << "rotated_rectangle" << ","
-           << prediction.shape.angle << ","
-           << prediction.shape.center.x << ","
-           << prediction.shape.center.y << ","
-           << prediction.shape.size.width << ","
-           << prediction.shape.size.height;
+           << (int)prediction.shape.center.x << ","
+           << (int)prediction.shape.center.y << ","
+           << (int)prediction.shape.size.width << ","
+           << (int)prediction.shape.size.height << ","
+           << (int)prediction.shape.size.area() << ","
+           << (int)prediction.shape.angle;
         rows.push_back(ss.str());
     }
 
@@ -65,19 +67,16 @@ inline std::vector<std::string> to_csv(const PolygonPrediction& prediction) {
 
     for (auto& label: prediction.labels) {
         std::stringstream ss;
-        ss.imbue(std::locale("en_US.UTF8"));
         ss << label.label.label << ","
            << label.label.label_id << ","
            << label.probability << ","
-           << prediction.area << ","
-           << prediction.size.width << ","
-           << prediction.size.height << ","
-           << "polygon";
-
-        for (auto& point: prediction.shape) {
-            ss << "," << point.x
-               << "," << point.y;
-        }
+           << "polygon" << ","
+           << prediction.boundingBox.x << ","
+           << prediction.boundingBox.y << ","
+           << prediction.boundingBox.width << ","
+           << prediction.boundingBox.height << ","
+           << (int)prediction.area << ","
+           << "0";
 
         rows.push_back(ss.str());
     }

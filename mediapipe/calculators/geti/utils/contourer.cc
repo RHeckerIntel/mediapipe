@@ -84,8 +84,8 @@ void Contourer::contour(const SegmentedObject &object) {
         store({
           {geti::LabelResult{object.confidence, labels[object.labelID]}},
           approxCurve,
-          area,
-          rect.size(),
+          rect,
+          area
         });
       }
     }

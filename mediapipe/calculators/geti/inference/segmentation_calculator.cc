@@ -86,8 +86,8 @@ absl::Status SegmentationCalculator::GetiProcess(CalculatorContext *cc) {
           {
             {geti::LabelResult{contour.probability, labels_map[contour.label]}},
              approxCurve,
-             area,
-             rect.size()
+             rect,
+             area
           }
         );
       }
