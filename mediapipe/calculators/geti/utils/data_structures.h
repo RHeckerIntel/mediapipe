@@ -25,6 +25,8 @@ struct LabelResult {
 struct PolygonPrediction {
   std::vector<LabelResult> labels;
   std::vector<cv::Point2i> shape;
+  cv::Rect boundingBox;
+  float area;
 };
 
 struct RectanglePrediction {
