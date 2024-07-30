@@ -26,7 +26,7 @@ cc_library(
     srcs = ["llm_inference.cc"],
     hdrs = ["llm_inference.h"],
     deps = [
-        "@windows_openvino//:openvino",
+        "//third_party:openvino",
     ]
 )
 

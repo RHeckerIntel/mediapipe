@@ -129,6 +129,15 @@ alias(
     visibility = ["//visibility:public"],
 )
 
+alias(
+    name = "openvino",
+    actual = select({
+        "//mediapipe:windows": "@windows_openvino//:openvino",
+        "//conditions:default": "@linux_openvino//:openvino",
+    }),
+    visibility = ["//visibility:public"],
+)
+
 bzl_library(
     name = "opencv_ios_xcframework_files_bzl",
     srcs = ["opencv_ios_xcframework_files.bzl"],

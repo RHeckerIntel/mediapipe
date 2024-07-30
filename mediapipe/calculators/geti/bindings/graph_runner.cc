@@ -52,6 +52,7 @@ void GraphRunner::Queue(const std::string& input) {
 }
 
 void GraphRunner::Stop() {
+    std::cout << "GraphRunner::Stop" << std::endl;
     running = false;
     if (camera_thread.joinable()) {
         camera_thread.join();
