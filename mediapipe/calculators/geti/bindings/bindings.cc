@@ -74,8 +74,16 @@ DLLEXPORT void GraphRunner_Listen(CGraphRunner instance, CallbackFunction callba
 }
 
 DLLEXPORT void GraphRunner_OpenCamera(CGraphRunner instance, int camera_index) {
+    std::cout << "Calling open camera in bindings" << std::endl;
     auto runner = reinterpret_cast<geti::GraphRunner*>(instance);
+    std::cout << "after reinterpret casting" << std::endl;
     runner->camera_thread = std::thread(&geti::GraphRunner::OpenCamera, runner, camera_index);
+}
+
+
+DLLEXPORT void GraphRunner_CloseCamera(CGraphRunner instance) {
+    std::cout << "Calling close camera in bindings" << std::endl;
+    reinterpret_cast<geti::GraphRunner*>(instance)->StopCamera();
 }
 
 DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, const char* output_filename) {

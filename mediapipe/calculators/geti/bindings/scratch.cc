@@ -25,7 +25,7 @@ int main() {
   std::string graph = buffer.str();
 
   auto instance = GraphRunner_Open(graph.c_str());
-  GraphRunner_OpenCamera(instance, "/dev/video0");
+  GraphRunner_OpenCamera(instance, 0);
 
   auto thread = std::thread(GraphRunner_Listen,instance, callback);
   std::this_thread::sleep_for(5000ms);

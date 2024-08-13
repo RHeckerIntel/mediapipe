@@ -30,6 +30,7 @@ class GraphRunner  {
   void Stop();
 
   bool OpenCamera(const int& device);
+  void StopCamera();
 
   static void SetupLogging(const char* filename);
   std::thread camera_thread;
@@ -40,6 +41,7 @@ class GraphRunner  {
   std::shared_ptr<mediapipe::OutputStreamPoller> poller;
   std::shared_ptr<mediapipe::CalculatorGraph> graph;
   bool running = false;
+  bool camera_running = false;
 };
 }
 

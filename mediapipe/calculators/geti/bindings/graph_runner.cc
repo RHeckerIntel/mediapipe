@@ -34,6 +34,7 @@ void GraphRunner::Listen(const std::function<void(const std::string&)> callback)
     while (running && poller->Next(&output_packet)) {
         callback(output_packet.Get<std::string>());
     }
+    std::cout << "End of listening" << std::endl;
 }
 
 void GraphRunner::Queue(const std::vector<char>& image_data) {
@@ -54,6 +55,7 @@ void GraphRunner::Queue(const std::string& input) {
 void GraphRunner::Stop() {
     std::cout << "GraphRunner::Stop" << std::endl;
     running = false;
+    camera_running = false;
     if (camera_thread.joinable()) {
         camera_thread.join();
     }
@@ -74,6 +76,7 @@ void GraphRunner::SetupLogging(const char* filename) {
 bool GraphRunner::OpenCamera(const int &device) {
     std::cout << "Loading camera: " << device << std::endl;
     cv::VideoCapture cap;
+    camera_running = true;
     std::cout << device << std::endl;
     cap.open(device);
     if (!cap.isOpened()) {
@@ -83,7 +86,7 @@ bool GraphRunner::OpenCamera(const int &device) {
 
     cv::Mat frame;
     mediapipe::Packet output_packet;
-    while(running) {
+    while(camera_running) {
         std::cout << "input..." << std::endl;
         cap.read(frame);
         std::cout << frame.rows << std::endl;
@@ -97,9 +100,18 @@ bool GraphRunner::OpenCamera(const int &device) {
         graph->WaitUntilIdle();
     }
 
+    std::cout << "Camera done." << std::endl;
+
     return true;
 
 
+}
+
+void GraphRunner::StopCamera() {
+    camera_running = false;
+    if (camera_thread.joinable()) {
+        camera_thread.join();
+    }
 }
 
 }
