@@ -846,7 +846,7 @@ new_local_repository(
 new_local_repository(
     name = "windows_openvino",
     build_file = "//third_party:openvino_windows.BUILD",
-    path = "C:/Intel/openvino.genai/ov/runtime",
+    path = "C:/Intel/openvino_2024.3.0/runtime",
 )
 
 new_local_repository(
@@ -876,7 +876,7 @@ new_git_repository(
     name = "model_api",
     remote = "https:///github.com/openvinotoolkit/model_api/",
     build_file = "@_model-api//:BUILD",
-    commit = "eb9fcfb1e1eebc047ff144707f76203b132e1aa6"
+    commit = "7aac2183f03a0112243be6e851fab85984798e19"
 )
 
 git_repository(

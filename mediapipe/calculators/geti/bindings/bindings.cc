@@ -73,9 +73,9 @@ DLLEXPORT void GraphRunner_Listen(CGraphRunner instance, CallbackFunction callba
     reinterpret_cast<geti::GraphRunner*>(instance)->Listen(lambda_callback);
 }
 
-DLLEXPORT void GraphRunner_OpenCamera(CGraphRunner instance, const char* device) {
+DLLEXPORT void GraphRunner_OpenCamera(CGraphRunner instance, int camera_index) {
     auto runner = reinterpret_cast<geti::GraphRunner*>(instance);
-    runner->camera_thread = std::thread(&geti::GraphRunner::OpenCamera, runner, device);
+    runner->camera_thread = std::thread(&geti::GraphRunner::OpenCamera, runner, camera_index);
 }
 
 DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, const char* output_filename) {
@@ -166,4 +166,8 @@ DLLEXPORT void LLM_ClearHistory(CLLMInference instance) {
 
 DLLEXPORT void LLM_ForceStop(CLLMInference instance) {
     reinterpret_cast<LLMInference*>(instance)->force_stop();
+}
+
+DLLEXPORT int List_Cameras(CameraInfo *camera_info, int max_cameras) {
+    return list_cameras(camera_info, max_cameras);
 }

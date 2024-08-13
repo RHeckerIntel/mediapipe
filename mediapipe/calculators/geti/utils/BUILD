@@ -279,12 +279,36 @@ cc_test(
 )
 
 cc_library(
-    name = "camera_info",
+    name = "camera_info_linux",
     srcs = [
-        "camera_info.cc",
+        "camera_info_linux.cc",
     ],
     hdrs = [
         "camera_info.h",
     ],
     deps = []
+)
+
+cc_library(
+    name = "camera_info_windows",
+    srcs = [
+        "camera_info_windows.cc",
+    ],
+    hdrs = [
+        "camera_info.h",
+    ],
+    linkopts = [
+        "ole32.lib",
+        "strmiids.lib",
+        "oleaut32.lib",
+    ],
+)
+
+alias(
+    name = "camera_info",
+    actual = select({
+        "//mediapipe:windows": ":camera_info_windows",
+        "//conditions:default": ":camera_info_linux",
+    }),
+    visibility = ["//visibility:public"],
 )

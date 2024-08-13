@@ -9,6 +9,8 @@
 #define DLLEXPORT
 #endif
 
+#include "../utils/camera_info.h"
+
 typedef void* CGraphRunner;
 typedef void (*CallbackFunction)(const char*);
 
@@ -21,7 +23,7 @@ extern "C" DLLEXPORT void GraphRunner_Queue(CGraphRunner instance, const char* i
 extern "C" DLLEXPORT void GraphRunner_QueueText(CGraphRunner instance, const char* input);
 extern "C" DLLEXPORT void SerializeModel(const char* model_path, const char* model_type, const char* output_filename);
 extern "C" DLLEXPORT void GraphRunner_SetLoggingOutput(const char* filename);
-extern "C" DLLEXPORT void GraphRunner_OpenCamera(CGraphRunner instance, const char* device);
+extern "C" DLLEXPORT void GraphRunner_OpenCamera(CGraphRunner instance, int device);
 extern "C" DLLEXPORT const char** GetAvailableDevices(int* length);
 
 
@@ -33,3 +35,5 @@ extern "C" DLLEXPORT const char* LLM_Prompt(CLLMInference instance, const char* 
 extern "C" DLLEXPORT void LLM_Close(CLLMInference instance);
 extern "C" DLLEXPORT void LLM_ClearHistory(CLLMInference instance);
 extern "C" DLLEXPORT void LLM_ForceStop(CLLMInference instance);
+
+extern "C" DLLEXPORT int List_Cameras(CameraInfo *camera_info, int max_cameras);

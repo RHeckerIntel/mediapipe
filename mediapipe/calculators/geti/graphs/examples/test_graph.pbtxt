@@ -1,4 +1,4 @@
-input_stream: "input"
+input_stream : "input"
       output_stream : "output"
 
 
@@ -7,8 +7,8 @@ input_stream: "input"
         output_side_packet : "INFERENCE_ADAPTER:adapter_0"
         node_options: {
           [type.googleapis.com/mediapipe.OpenVINOInferenceAdapterCalculatorOptions] {
-              model_path: "/home/rhecker/.local/share/intel.openvino.console/d1c59d7c-3196-4753-9256-12e7ae7a1329/662aac23edcb02d8b632309a.xml"
-              device: "CPU"
+              model_path: "C:/Users/selse/AppData/Roaming/intel.openvino/inference/b809954f-278f-4b17-8d71-9668503c0864/662aac23edcb02d8b632309a.xml"
+              device: "AUTO"
           }
         }
         }
@@ -65,7 +65,7 @@ input_stream: "input"
       opacity: 0.4
       font_size: 1.0
 
-            font_path: "/home/rhecker/.local/share/intel.openvino.console/font.ttf"
+            font_path: "C:/Users/selse/AppData/Roaming/intel.openvino/inference/font.ttf"
           }
         }
       }

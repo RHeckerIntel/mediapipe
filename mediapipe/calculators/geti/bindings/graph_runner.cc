@@ -71,7 +71,7 @@ void GraphRunner::SetupLogging(const char* filename) {
     }
 }
 
-bool GraphRunner::OpenCamera(const std::string &device) {
+bool GraphRunner::OpenCamera(const int &device) {
     std::cout << "Loading camera: " << device << std::endl;
     cv::VideoCapture cap;
     std::cout << device << std::endl;

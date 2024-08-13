@@ -50,6 +50,7 @@ windows_dll_library(
     srcs = [ "bindings.cc" ],
     hdrs = [ "bindings.h" ],
     deps = [
+        "//mediapipe/calculators/geti/utils:camera_info",
         "@windows_pugixml//:pugixml",
         "@windows_tbb//:tbb",
         ":graph_runner",
@@ -61,7 +62,10 @@ windows_dll_library(
 cc_binary(
     name = "scratch",
     srcs = [ "scratch.cc",],
-    deps = [":windows_bindings"]
+    deps = [":windows_bindings"],
+    data = [
+        "//mediapipe/calculators/geti/graphs:graphs",
+    ]
 )
 
 cc_binary(

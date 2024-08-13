@@ -29,7 +29,7 @@ class GraphRunner  {
   void Queue(const std::string& input);
   void Stop();
 
-  bool OpenCamera(const std::string& device);
+  bool OpenCamera(const int& device);
 
   static void SetupLogging(const char* filename);
   std::thread camera_thread;
