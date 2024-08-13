@@ -78,8 +78,15 @@ void Contourer::contour(const SegmentedObject &object) {
             point += offset;
         }
 
-        store({{geti::LabelResult{object.confidence, labels[object.labelID]}},
-               approxCurve});
+        auto rect = cv::boundingRect(approxCurve);
+
+        float area = biggest_area;
+        store({
+          {geti::LabelResult{object.confidence, labels[object.labelID]}},
+          approxCurve,
+          rect,
+          area
+        });
       }
     }
   }

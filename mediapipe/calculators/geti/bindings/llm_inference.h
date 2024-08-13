@@ -11,6 +11,12 @@ class LLMInference {
     LLMInference(std::string device, std::string model_path): pipe(model_path, device) {}
     void set_streamer(bool (*callback)(const char*));
     std::string prompt(std::string message);
+    void clear_history();
+    void force_stop();
+
+  private:
+    bool _stop = false;
+
 
 };
 

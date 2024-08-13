@@ -70,6 +70,7 @@ inline void to_json(nlohmann ::json& nlohmann_json_j,
   nlohmann_json_j["labels"] = nlohmann_json_t.labels;
   nlohmann_json_j["shape"]["points"] = nlohmann_json_t.shape;
   nlohmann_json_j["shape"]["type"] = "POLYGON";
+  nlohmann_json_j["shape"]["area"] = nlohmann_json_t.area;
 }
 
 inline void to_json(nlohmann ::json& nlohmann_json_j,
