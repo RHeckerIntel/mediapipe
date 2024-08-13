@@ -111,6 +111,7 @@ DLLEXPORT const char** GetAvailableDevices(int* length) {
     auto core = ov::Core();
 
     auto devices = core.get_available_devices();
+    devices.insert(devices.begin(), "AUTO");
     *length = devices.size();
     std::cout << devices.size() << std::endl;
     const char** strings = (const char**)malloc(devices.size() * sizeof(char*));

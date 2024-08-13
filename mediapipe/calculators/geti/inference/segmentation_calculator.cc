@@ -1,7 +1,6 @@
 #include "segmentation_calculator.h"
 
 #include <memory>
-#include <opencv4/opencv2/imgproc.hpp>
 #include <string>
 
 #include "../inference/utils.h"
